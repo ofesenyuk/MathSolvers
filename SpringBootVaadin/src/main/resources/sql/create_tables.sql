@@ -23,3 +23,6 @@ CREATE TABLE matrix (
     PRIMARY KEY (id),
     FOREIGN KEY (problem_id) REFERENCES problem(id)
 );
+
+
+CREATE TABLE matrix (id BIGINT NOT NULL AUTO_INCREMENT, binary_value LONGBLOB, float_value DOUBLE, i INT, is_condition BIT(1), j INT, problem_id BIGINT NOT NULL, PRIMARY KEY (id));

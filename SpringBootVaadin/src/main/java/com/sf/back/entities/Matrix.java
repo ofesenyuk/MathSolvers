@@ -21,6 +21,7 @@ import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
 import javax.xml.bind.annotation.XmlRootElement;
 import lombok.Builder;
+import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -39,9 +40,10 @@ import lombok.Setter;
     , @NamedQuery(name = "Matrix.findByJ", query = "SELECT m FROM Matrix m WHERE m.j = :j")
     , @NamedQuery(name = "Matrix.findByFloatValue", query = "SELECT m FROM Matrix m WHERE m.floatValue = :floatValue")
     , @NamedQuery(name = "Matrix.findByIsCondition", query = "SELECT m FROM Matrix m WHERE m.isCondition = :isCondition")})
-@Getter
-@Setter
-@NoArgsConstructor
+//@Getter
+//@Setter
+//@NoArgsConstructor
+//@EqualsAndHashCode(of = {"id"})
 public class Matrix implements Serializable {
 
     private static final long serialVersionUID = 1L;
@@ -65,31 +67,67 @@ public class Matrix implements Serializable {
     private Boolean isCondition;
     @JoinColumn(name = "problem_id", referencedColumnName = "id")
     @ManyToOne(optional = false)
-    private Problem problemId;
-
-    @Override
-    public int hashCode() {
-        int hash = 0;
-        hash += (id != null ? id.hashCode() : 0);
-        return hash;
-    }
-
-    @Override
-    public boolean equals(Object object) {
-        // TODO: Warning - this method won't work in the case the id fields are not set
-        if (!(object instanceof Matrix)) {
-            return false;
-        }
-        Matrix other = (Matrix) object;
-        if ((this.id == null && other.id != null) || (this.id != null && !this.id.equals(other.id))) {
-            return false;
-        }
-        return true;
-    }
+    private Problem parentProblem;
 
     @Override
     public String toString() {
         return "com.sf.back.entities.Matrix[ id=" + id + " ]";
+    }
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
+
+    public Integer getI() {
+        return i;
+    }
+
+    public void setI(Integer i) {
+        this.i = i;
+    }
+
+    public Integer getJ() {
+        return j;
+    }
+
+    public void setJ(Integer j) {
+        this.j = j;
+    }
+
+    public Double getFloatValue() {
+        return floatValue;
+    }
+
+    public void setFloatValue(Double floatValue) {
+        this.floatValue = floatValue;
+    }
+
+    public byte[] getBinaryValue() {
+        return binaryValue;
+    }
+
+    public void setBinaryValue(byte[] binaryValue) {
+        this.binaryValue = binaryValue;
+    }
+
+    public Boolean getIsCondition() {
+        return isCondition;
+    }
+
+    public void setIsCondition(Boolean isCondition) {
+        this.isCondition = isCondition;
+    }
+
+    public Problem getParentProblem() {
+        return parentProblem;
+    }
+
+    public void setParentProblem(Problem parentProblem) {
+        this.parentProblem = parentProblem;
     }
     
 }
