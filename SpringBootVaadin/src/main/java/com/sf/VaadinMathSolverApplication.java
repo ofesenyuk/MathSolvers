@@ -19,6 +19,12 @@ public class VaadinMathSolverApplication {
             SpringApplication.run(VaadinMathSolverApplication.class, args);
     }
 
+    /**
+     * Test data preparation
+     * @param problemRepository
+     * @param matrixRepository
+     * @return 
+     */
     @Bean
     public CommandLineRunner loadData(ProblemRepository problemRepository, 
                                       MatrixRepository matrixRepository) {
@@ -48,7 +54,6 @@ public class VaadinMathSolverApplication {
             c.setParentProblem(p);
             System.out.println("data are prepared");
             final List<Matrix> coefficients = Arrays.asList(a, b, c);
-//            coefficients.forEach(coeff -> matrixRepository.save(coeff));
             
             p.setMatrixes(coefficients);
             problemRepository.save(p);

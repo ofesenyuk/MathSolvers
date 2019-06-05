@@ -1,23 +1,14 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package com.sf.shared.dto;
 
 import com.sf.back.entities.Kind;
-import java.util.List;
 import java.util.Map;
-import lombok.Getter;
-import lombok.Setter;
 
 /**
  *
  * @author sf
  */
-//@Getter
-//@Setter
 public class ProblemDTO {
+    private Long id;
     private String description;
     private String[][] conditionArray;
     private Map<String,String[][]> solution;
@@ -57,5 +48,13 @@ public class ProblemDTO {
 
     public void setKind(Kind kind) {
         this.kind = kind;
+    }
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
     }
 }

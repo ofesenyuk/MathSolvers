@@ -1,28 +1,19 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package com.sf.front;
 
 import static com.sf.back.entities.Kind.POLYNOMIAL;
-import com.sf.back.entities.Problem;
-import com.sf.repository.ProblemRepository;
 import com.sf.service.ProblemService;
-import com.sf.shared.dto.MatrixRow;
 import com.sf.shared.dto.ProblemDTO;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.grid.Grid;
-import com.vaadin.flow.component.html.Div;
 import com.vaadin.flow.component.html.Label;
 import com.vaadin.flow.component.icon.VaadinIcon;
-import com.vaadin.flow.component.notification.Notification;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.router.Route;
-import java.util.ArrayList;
+import com.vaadin.flow.server.PWA;
+import java.util.Arrays;
 import java.util.List;
-import java.util.stream.IntStream;
+import java.util.Objects;
 import org.springframework.beans.factory.annotation.Autowired;
 
 /**
@@ -30,7 +21,11 @@ import org.springframework.beans.factory.annotation.Autowired;
  * @author sf
  */
 @Route
+@PWA(name = "Project Base for Vaadin Flow", shortName = "Project Base")
 public class MainView extends VerticalLayout {
+
+    private static final String CONDITION_COL = "Condition";
+    private static final String DESCRIPTION_COL = "Description";
 
     private final ProblemService service;
     
@@ -45,29 +40,43 @@ public class MainView extends VerticalLayout {
         this.addNewBtn = new Button("New problem", VaadinIcon.PLUS.create());
         this.problemEditor = editor;
         
-        add(grid, addNewBtn);
+        add(grid, addNewBtn, editor);
         
         listProblems();
-        addNewBtn.addClickListener(e -> editor.editProblem());
+        // Connect selected Problem to editor or hide if none is selected
+        grid.asSingleSelect().addValueChangeListener(e -> {
+            editor.editProblem(e.getValue());
+        });
+        
+        // Instantiate and edit new Problem the new button is clicked
+        addNewBtn.addClickListener(e -> editor.createProblem());
+        
+        // Listen changes made by the editor, refresh data from backend
+        editor.setChangeHandler(() -> {
+            editor.setVisible(false);
+            listProblems();
+        });
     }
 
     private void listProblems() {
         final List<ProblemDTO> problems = service.findAll();
         grid.setItems(problems);
-        grid.addColumn(ProblemDTO::getDescription).setHeader("Description");
-        grid.addComponentColumn(item -> createMatrixGrid(item))
-                .setHeader("Condition");
-//        grid.setColumns("Description", "Condition", "Solution");
-//        grid.addComponentColumn(ProblemDTO::new).setHeader("dssdfgasf");
+        addNewColumnsIfAbsent();
+    }
+
+    private void addNewColumnsIfAbsent() {
+        if (Arrays.asList(DESCRIPTION_COL, CONDITION_COL).stream()
+                .map(key -> grid.getColumnByKey(key))
+                .allMatch(Objects::isNull)) {
+            grid.addColumn(ProblemDTO::getDescription).setHeader(DESCRIPTION_COL)
+                    .setKey(DESCRIPTION_COL);
+            grid.addComponentColumn(item -> createMatrixGrid(item))
+                    .setHeader(CONDITION_COL).setKey(CONDITION_COL);
+        }
     }
 
     private HorizontalLayout createMatrixGrid(ProblemDTO problemDTO) {
-        final Grid<MatrixRow> matrixGrid = new Grid<>(MatrixRow.class);
         final String[][] conditionArray = problemDTO.getConditionArray();
-//        matrixGrid.setItems(item.getCondition());
-//        System.out.println("item 0 = " + item.getCondition().get(0).getMatrixRow().get(0));
-//        System.out.println("\nitem 0 = " + item.getCondition().get(0).getMetaClass().getJ1());
-//        matrixGrid.addColumn(MatrixRow::getMatrixRow).setHeader("");
         VerticalLayout[] verticalLayouts 
                 = new VerticalLayout[conditionArray[0].length];
         for (int j = 0; j < conditionArray[0].length; j++) {
@@ -80,45 +89,9 @@ public class MainView extends VerticalLayout {
                     value += "x" + (j > 1 ? "^" + j : "");
                 }
                 final Label label = new Label(value);
-//                matrixGrid.addComponentColumn(item -> new MatrixCell(value));
                 verticalLayouts[j].add(label);
             }
         }
         return new HorizontalLayout(verticalLayouts);
-    }
-    
-
-//    private Grid<MatrixRow> createMatrixGrid(ProblemDTO problemDTO) {
-//        final Grid<MatrixRow> matrixGrid = new Grid<>(MatrixRow.class);
-//        final String[][] conditionArray = problemDTO.getConditionArray();
-//        matrixGrid.setItems(problemDTO.getCondition());
-////        System.out.println("item 0 = " + item.getCondition().get(0).getMatrixRow().get(0));
-////        System.out.println("\nitem 0 = " + item.getCondition().get(0).getMetaClass().getJ1());
-////        matrixGrid.addColumn(MatrixRow::getMatrixRow).setHeader("");
-////        for (int i = 0; i < conditionArray.length; i++) {
-////            for (int j = 0; j < conditionArray[i].length; j++) {
-////                final String value = conditionArray[i][j];
-////                final Label label = new Label(value);
-////                matrixGrid.addComponentColumn(item -> MatrixCell(item));
-////            }
-////        }
-//        matrixGrid.addComponentColumn(item -> new MatrixCell(item));
-////        matrixGrid.addComponentColumn(componentProvider)
-//        return matrixGrid;
-//    }
-    
-    static class MatrixCell extends Div {
-        private final String text;
-
-        public MatrixCell(String text) {
-            this.text = text;
-            setText(text);
-        }
-
-        private MatrixCell(MatrixRow row) {
-            text = row.getCells().get(0);
-            setText(text);            
-        }
-    }
-    
+    }    
 }

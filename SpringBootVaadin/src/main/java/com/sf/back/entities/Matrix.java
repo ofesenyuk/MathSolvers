@@ -15,16 +15,8 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.Lob;
 import javax.persistence.ManyToOne;
-import javax.persistence.NamedQueries;
-import javax.persistence.NamedQuery;
 import javax.persistence.Table;
-import javax.validation.constraints.NotNull;
 import javax.xml.bind.annotation.XmlRootElement;
-import lombok.Builder;
-import lombok.EqualsAndHashCode;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
 
 /**
  *
@@ -33,23 +25,11 @@ import lombok.Setter;
 @Entity
 @Table(name = "matrix")
 @XmlRootElement
-@NamedQueries({
-    @NamedQuery(name = "Matrix.findAll", query = "SELECT m FROM Matrix m")
-    , @NamedQuery(name = "Matrix.findById", query = "SELECT m FROM Matrix m WHERE m.id = :id")
-    , @NamedQuery(name = "Matrix.findByI", query = "SELECT m FROM Matrix m WHERE m.i = :i")
-    , @NamedQuery(name = "Matrix.findByJ", query = "SELECT m FROM Matrix m WHERE m.j = :j")
-    , @NamedQuery(name = "Matrix.findByFloatValue", query = "SELECT m FROM Matrix m WHERE m.floatValue = :floatValue")
-    , @NamedQuery(name = "Matrix.findByIsCondition", query = "SELECT m FROM Matrix m WHERE m.isCondition = :isCondition")})
-//@Getter
-//@Setter
-//@NoArgsConstructor
-//@EqualsAndHashCode(of = {"id"})
 public class Matrix implements Serializable {
 
     private static final long serialVersionUID = 1L;
     @Id
     @Basic(optional = false)
-//    @NotNull
     @Column(name = "id")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -57,14 +37,13 @@ public class Matrix implements Serializable {
     private Integer i;
     @Column(name = "j")
     private Integer j;
-    // @Max(value=?)  @Min(value=?)//if you know range of your decimal fields consider using these annotations to enforce field validation
     @Column(name = "float_value")
     private Double floatValue;
     @Lob
     @Column(name = "binary_value")
     private byte[] binaryValue;
-    @Column(name = "is_condition")
-    private Boolean isCondition;
+    @Column(name = "is_condition", nullable = false)
+    private boolean isCondition = true;
     @JoinColumn(name = "problem_id", referencedColumnName = "id")
     @ManyToOne(optional = false)
     private Problem parentProblem;
