@@ -14,6 +14,8 @@ import com.vaadin.flow.server.PWA;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 
 /**
@@ -25,7 +27,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 public class MainView extends VerticalLayout {
 
     private static final String CONDITION_COL = "Condition";
-    private static final String DESCRIPTION_COL = "Description";
+    private static final String DESCRIPTION_COL = "Description";    
+    
+    Logger LOG = LoggerFactory.getLogger(MainView.class);
 
     private final ProblemService service;
     
@@ -62,6 +66,7 @@ public class MainView extends VerticalLayout {
         final List<ProblemDTO> problems = service.findAll();
         grid.setItems(problems);
         addNewColumnsIfAbsent();
+        LOG.info("{} problems are read in front", problems.size());
     }
 
     private void addNewColumnsIfAbsent() {
@@ -70,12 +75,12 @@ public class MainView extends VerticalLayout {
                 .allMatch(Objects::isNull)) {
             grid.addColumn(ProblemDTO::getDescription).setHeader(DESCRIPTION_COL)
                     .setKey(DESCRIPTION_COL);
-            grid.addComponentColumn(item -> createMatrixGrid(item))
+            grid.addComponentColumn(item -> createConditionGrid(item))
                     .setHeader(CONDITION_COL).setKey(CONDITION_COL);
         }
     }
 
-    private HorizontalLayout createMatrixGrid(ProblemDTO problemDTO) {
+    private HorizontalLayout createConditionGrid(ProblemDTO problemDTO) {
         final String[][] conditionArray = problemDTO.getConditionArray();
         VerticalLayout[] verticalLayouts 
                 = new VerticalLayout[conditionArray[0].length];

@@ -5,8 +5,11 @@ import com.sf.back.entities.Matrix;
 import com.sf.back.entities.Problem;
 import com.sf.repository.MatrixRepository;
 import com.sf.repository.ProblemRepository;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -14,6 +17,8 @@ import org.springframework.context.annotation.Bean;
 
 @SpringBootApplication
 public class VaadinMathSolverApplication {
+
+    Logger LOG = LoggerFactory.getLogger(VaadinMathSolverApplication.class);
 
     public static void main(String[] args) {
             SpringApplication.run(VaadinMathSolverApplication.class, args);
@@ -34,6 +39,7 @@ public class VaadinMathSolverApplication {
             p.setIsSolved(false);
             p.setKind(Kind.POLYNOMIAL);
             p.setMatrixDimension(1);
+            p.setProblemPrecision(6);
             final Matrix a = new Matrix();
             a.setI(0);
             a.setJ(0);
@@ -52,11 +58,28 @@ public class VaadinMathSolverApplication {
             c.setFloatValue(1.0d);
             c.setIsCondition(true);
             c.setParentProblem(p);
-            System.out.println("data are prepared");
             final List<Matrix> coefficients = Arrays.asList(a, b, c);
             
-            p.setMatrixes(coefficients);
+            final Matrix x1 = new Matrix();
+            x1.setI(0);
+            x1.setJ(0);
+            x1.setFloatValue(1.0);
+            x1.setIsCondition(false);  
+            x1.setParentProblem(p);
+            final Matrix x2 = new Matrix();
+            x2.setI(0);
+            x2.setJ(0);
+            x2.setFloatValue(1.0);
+            x2.setIsCondition(false);
+            x2.setParentProblem(p);
+            final List<Matrix> solutions = Arrays.asList(x1, x2);
+            
+            final List<Matrix> matrixes = new ArrayList<>(coefficients);
+            matrixes.addAll(solutions);
+            
+            p.setMatrixes(matrixes);
             problemRepository.save(p);
+            LOG.info("test data are prepared and saved");
         };
     }
 }

@@ -6,8 +6,11 @@ import com.sf.shared.dto.ProblemDTO;
 import com.vaadin.flow.component.AbstractField;
 import com.vaadin.flow.component.Component;
 import com.vaadin.flow.component.KeyNotifier;
+import com.vaadin.flow.component.Text;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.combobox.ComboBox;
+import com.vaadin.flow.component.details.Details;
+import com.vaadin.flow.component.details.DetailsVariant;
 import com.vaadin.flow.component.formlayout.FormLayout;
 import com.vaadin.flow.component.icon.VaadinIcon;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
@@ -15,6 +18,7 @@ import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.textfield.TextArea;
 import com.vaadin.flow.component.textfield.TextField;
 import com.vaadin.flow.data.binder.Binder;
+import com.vaadin.flow.shared.Registration;
 import com.vaadin.flow.spring.annotation.SpringComponent;
 import com.vaadin.flow.spring.annotation.UIScope;
 import java.util.List;
@@ -38,22 +42,29 @@ public class ProblemEditor extends VerticalLayout implements KeyNotifier {
     Button save = new Button("Save", VaadinIcon.CHECK.create());
     Button cancel = new Button("Cancel");
     Button delete = new Button("Delete", VaadinIcon.TRASH.create());
-    HorizontalLayout actions = new HorizontalLayout(save, cancel, delete);
+    
+    HorizontalLayout solutionLayout = new HorizontalLayout();
+    Details solutionButton = new Details("Solution", solutionLayout);
+    
+    HorizontalLayout actions = new HorizontalLayout(save, cancel, delete, 
+        solutionButton);
     HorizontalLayout matrixInput = new HorizontalLayout();
     
     TextArea description = new TextArea("description");
     ComboBox<Kind> kind = new ComboBox<>("Select problem kind", Kind.values());
-    TextField dimension = new TextField("Polinomial order");
+    TextField dimension = new TextField("Polynomial order");
+    TextField problemPrecision = new TextField("Problem precision");
     HorizontalLayout matrix = new HorizontalLayout();
     
-    FormLayout conditionLayout = new FormLayout(kind);
+    FormLayout conditionLayout = new FormLayout(description, kind, dimension, 
+            problemPrecision);
     Binder<ProblemDTO> binder = new Binder<>(ProblemDTO.class);
     private ChangeHandler changeHandler;
 
     @Autowired
     public ProblemEditor(ProblemService service) {
         this.service = service;
-        add(description, conditionLayout, dimension, matrixInput, actions);
+        add(conditionLayout, matrixInput, actions);
         
         // bind using naming convention
         binder.bindInstanceFields(this);
@@ -73,6 +84,9 @@ public class ProblemEditor extends VerticalLayout implements KeyNotifier {
         delete.addClickListener(e -> delete());
         cancel.addClickListener(e -> editProblem(problem));
         
+        solutionButton.addThemeVariants(DetailsVariant.REVERSE, 
+                                        DetailsVariant.FILLED);
+        solutionButton.addOpenedChangeListener(this::sendSolutionRequest);
         
         kind.addValueChangeListener(this::onKindSelect);
         dimension.addValueChangeListener(this::onDimensionChange);
@@ -113,7 +127,7 @@ public class ProblemEditor extends VerticalLayout implements KeyNotifier {
         }
         cancel.setVisible(isPersisted);
 
-        // Bind customer properties to similarly named fields
+        // Bind problem properties to similarly named fields
         // Could also use annotation or "manual binding" or programmatically
         // moving values from fields to entities before saving
         binder.setBean(problem);
@@ -123,6 +137,14 @@ public class ProblemEditor extends VerticalLayout implements KeyNotifier {
         // Focus first name initially
         description.focus();
         fillMatrixInputFromDto();
+        final String[][] conditionArray = problem.getConditionArray();
+        
+        StringBuilder dim = new StringBuilder();
+        if (conditionArray.length > 1) {
+            dim.append(conditionArray.length).append("X");
+        }
+        dim.append(conditionArray[0].length - 1);
+        dimension.setValue(dim.toString());
     }
     
     public void setChangeHandler(ChangeHandler h) {
@@ -192,7 +214,7 @@ public class ProblemEditor extends VerticalLayout implements KeyNotifier {
             return;
         }
         if (event.getValue().equals(Kind.POLYNOMIAL)) {
-            dimension.setLabel("Polinomial order");
+            dimension.setLabel("Polynomial order");
         }
         if (problem != null && problem.getConditionArray() != null 
                 && problem.getConditionArray().length > 0) {
@@ -227,6 +249,13 @@ public class ProblemEditor extends VerticalLayout implements KeyNotifier {
 
     private void readProblemFromInput() {
         problem.setDescription(description.getValue());
+    }
+
+    private Registration sendSolutionRequest(Details.OpenedChangeEvent e) {
+        if (e.isOpened()) {
+            problem.setSolution(service.getSolution(problem.getId()));
+        }
+        return null;
     }
     
     public interface ChangeHandler {

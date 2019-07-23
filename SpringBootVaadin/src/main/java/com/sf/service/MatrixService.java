@@ -2,6 +2,7 @@ package com.sf.service;
 
 import com.sf.back.entities.Matrix;
 import com.sf.repository.MatrixRepository;
+import java.util.List;
 import org.springframework.stereotype.Service;
 
 /**
@@ -22,6 +23,10 @@ public class MatrixService {
 
     void delete(Matrix matrix) {
         repository.delete(matrix);
+    }
+
+    List<Matrix> getSolution(Long id) {
+        return repository.findByIsConditionAndParentProblemId(false, id);
     }
     
 }

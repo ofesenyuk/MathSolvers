@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<configuration scan="true">
+  <include resource="org/springframework/boot/logging/logback/defaults.xml"/>
+  <include resource="org/springframework/boot/logging/logback/console-appender.xml"/>
+
+  <appender name="CONTEXT" class="ch.qos.logback.classic.sift.SiftingAppender">
+    <discriminator>
+      <key>context</key>
+      <defaultValue>CORE</defaultValue>
+    </discriminator>
+    <sift>
+      <appender name="FILE" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <file>math-solver-${context}.log</file>
+        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+          <fileNamePattern>math-solver${context}.%d{yyyy-MM-dd}.log</fileNamePattern>
+          <maxHistory>90</maxHistory>
+        </rollingPolicy>
+        <encoder>
+          <charset>utf-8</charset>
+          <Pattern>%d %-5level %replace([%X{master}] ){'\[\]\s', ''} [%thread] %logger{0}: %msg%n</Pattern>
+        </encoder>
+      </appender>
+    </sift>
+  </appender>    
+  <appender name="ASYNC" class="ch.qos.logback.classic.AsyncAppender">
+    <queueSize>512</queueSize>
+    <appender-ref ref="CONTEXT"/>
+  </appender>
+
+  <logger name="ibs" level="DEBUG"/>
+<!--  <logger name="ibs" level="TRACE"/> -->
+  <logger name="ibs.internal.csv" level="DEBUG"/>
+  <logger name="ibs.i18n.ExtendedCookieLocaleResolver" level="INFO"/>
+  <logger name="org.springframework.web.filter.CommonsRequestLoggingFilter" level="DEBUG"/>
+  <logger name="ibs.config.ConstantsSerializer" level="DEBUG"/>
+
+<!--  <include resource="logback-${spring.profiles.active}.xml"/> -->
+
+  <contextListener class="ch.qos.logback.classic.jul.LevelChangePropagator">
+    <resetJUL>true</resetJUL>
+  </contextListener>
+
+
+  <root level="INFO">
+    <appender-ref ref="CONSOLE"/>
+    <appender-ref ref="CONTEXT"/>
+  </root>
+
+</configuration>

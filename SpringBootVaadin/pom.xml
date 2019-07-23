@@ -11,7 +11,7 @@
 	<groupId>com.sf</groupId>
 	<artifactId>spring.boot.vaadin</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
-	<name>spring.boot.vaadin</name>
+	<name>Vaadin Math Solver</name>
 	<description>Demo project for Spring Boot</description>
 
 	<properties>
@@ -52,17 +52,18 @@
 			<artifactId>postgresql</artifactId>
 			<scope>runtime</scope>
 		</dependency>
+                <!--removed because of conflicts with groovy-->
                 <dependency>
                     <groupId>net.sf.dozer</groupId>
                     <artifactId>dozer</artifactId>
                     <version>5.5.1</version>
                 </dependency>
-<!--		<dependency>
+		<dependency>
 			<groupId>org.projectlombok</groupId>
 			<artifactId>lombok</artifactId>
 			<optional>true</optional>
                         <scope>provided</scope>
-		</dependency>-->
+		</dependency>
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-test</artifactId>

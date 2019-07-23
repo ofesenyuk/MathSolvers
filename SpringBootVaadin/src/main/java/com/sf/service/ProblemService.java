@@ -12,6 +12,8 @@ import java.util.Objects;
 import java.util.stream.Collectors;
 import org.dozer.DozerBeanMapper;
 import org.dozer.loader.api.BeanMappingBuilder;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.util.Pair;
 import org.springframework.stereotype.Service;
@@ -24,9 +26,12 @@ import org.springframework.transaction.annotation.Transactional;
  */
 @Service
 public class ProblemService {
+    Logger LOG = LoggerFactory.getLogger(ProblemService.class);
     private final ProblemRepository problemRepository;
     private final DozerBeanMapper mapper;
     private final MatrixService matrixService;
+    private static final String META_CLASS = "metaClass";
+    private static final String DESCRIPTION = "description";
 
     @Autowired
     public ProblemService(ProblemRepository problemRepository,
@@ -37,7 +42,9 @@ public class ProblemService {
         mapper.addMapping(new BeanMappingBuilder() {
             @Override
             protected void configure() {
-                mapping(ProblemDTO.class, Problem.class).exclude("description");
+                mapping(ProblemDTO.class, Problem.class)
+                    .exclude(DESCRIPTION)
+                    .exclude(META_CLASS);
             }
         });
         this.matrixService = matrixService;
@@ -49,11 +56,17 @@ public class ProblemService {
         final List<ProblemDTO> dtos = problemsDb.stream()
                 .map(this::toProblemDTO)
                 .collect(Collectors.toList());
+        LOG.info("{} problems are found", problemsDb.size());
         return dtos;
     }
 
     public ProblemDTO findById(Long id) {
-        return problemRepository.findById(id).map(this::toProblemDTO).orElse(null);
+        return problemRepository.findById(id)
+            .map(this::toProblemDTO)
+            .orElseGet(() -> {
+                LOG.warn("Problem with {} is not found", id);
+                return null;
+            });
     }
 
     @Transactional(propagation = Propagation.REQUIRED)
@@ -62,6 +75,7 @@ public class ProblemService {
         if (isProblemNew) {
             Problem problem = toNewProblemDB(problemDTO);
             problemRepository.save(problem);
+            LOG.info("new problem with id {} is saved", problem.getId());
             return;
         }
         mergeProblemAndLinkedMatrixes(problemDTO);
@@ -75,11 +89,13 @@ public class ProblemService {
                     + " for deletion");
         }
         problemRepository.deleteById(id);
+        LOG.info("problem with id {} is deveted", id);
     }
     
     private  ProblemDTO toProblemDTO(Problem problem) {
         ProblemDTO problemDTO = mapper.map(problem, ProblemDTO.class);
         problemDTO.setDescription(problem.getDescription());
+        
         final Collection<Matrix> matrixes = problem.getMatrixes();
         final List<Matrix> conditionList = matrixes.stream()
             .filter(Matrix::getIsCondition)
@@ -108,6 +124,7 @@ public class ProblemService {
     }
 
     private Problem toNewProblemDB(ProblemDTO problemDTO) {
+//        Problem problem = toProblemDB(problemDTO);
         final Problem problem = mapper.map(problemDTO, Problem.class);
         problem.setDescription(problemDTO.getDescription().getBytes());
         final String[][] conditionArray = problemDTO.getConditionArray();
@@ -116,12 +133,24 @@ public class ProblemService {
         return problem;
     }
 
+    private Problem toProblemDB(ProblemDTO problemDTO) throws NumberFormatException {
+        final Problem problem = new Problem();
+        problem.setId(problemDTO.getId());
+        problem.setKind(problemDTO.getKind());
+        problem.setProblemPrecision(Integer.valueOf(problemDTO
+                .getProblemPrecision()));
+        problem.setDescription(problemDTO.getDescription().getBytes());
+        return problem;
+    }
+
     private void mergeProblemAndLinkedMatrixes(ProblemDTO problemDTO) {
         Long id = problemDTO.getId();
         final Problem problem = problemRepository.findById(id).orElse(null);
         if (problem == null) {
+            LOG.warn("problem is not found in repository");
             return;
         }
+//        final Problem newProblem = toProblemDB(problemDTO);
         final Problem newProblem = mapper.map(problemDTO, Problem.class);
         newProblem.setDescription(problemDTO.getDescription().getBytes());
         final Map<Pair<Integer,Integer>,Matrix> conditionMatrixes = problem
@@ -170,6 +199,7 @@ public class ProblemService {
         problem.setDescription(newProblem.getDescription());
         problem.setKind(newProblem.getKind());
         problemRepository.save(problem);
+        LOG.info("problem with id {} is merged", problem.getId());
     }
 
     private List<Matrix> fillMatrixes(String[][] conditionArray, 
@@ -193,5 +223,10 @@ public class ProblemService {
             }
         }
         return matrixes;
+    }
+
+    public Map<String, String[][]> getSolution(Long id) {
+        List<Matrix> solutionMatrixes = matrixService.getSolution(id);
+        return null;
     }
 }
