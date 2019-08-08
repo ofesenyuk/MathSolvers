@@ -14,10 +14,10 @@ import groovy.transform.*;
  * @author sf
  */
 @Canonical
-class ProblemDTO {
+class ProblemDTO implements Cloneable {
     Long id;
     String description;
-    String problemPrecision;
+    Integer problemPrecision;
     String[][] conditionArray;
     Map<String,String[][]> solution;
     Kind kind;

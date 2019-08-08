@@ -25,8 +25,9 @@ public class MatrixService {
         repository.delete(matrix);
     }
 
-    List<Matrix> getSolution(Long id) {
-        return repository.findByIsConditionAndParentProblemId(false, id);
+    List<Matrix> getSolution(Long parentProblemId) {
+        return repository.findByIsConditionAndParentProblemId(false, 
+            parentProblemId);
     }
     
 }

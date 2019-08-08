@@ -8,6 +8,7 @@ import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Enumerated;
+import javax.persistence.EnumType;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -47,7 +48,7 @@ public class Problem implements Serializable {
     @Column(name = "is_solved")
     Boolean isSolved;
     @Column(name = "kind", nullable = false)
-    @Enumerated//(EnumType.STRING)
+    @Enumerated(EnumType.STRING)
     Kind kind = POLYNOMIAL;
     @OneToMany(mappedBy = "parentProblem", fetch = FetchType.EAGER)
     Collection<Problem> children;

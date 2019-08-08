@@ -3,7 +3,8 @@ DROP TABLE problem;
 
 CREATE TABLE problem (
     id BIGINT AUTO_INCREMENT,
-    description BLOB,
+    description BLOB, 
+    kind INT NOT NULL,
     problem_precision INT,
     matrix_dimension INT,
     parent_problem BIGINT,
@@ -21,9 +22,9 @@ CREATE TABLE matrix (
     binary_value BLOB,
     problem_id BIGINT NOT NULL,
     is_condition BIT(1) not null,
-    PRIMARY KEY (id, i, j),
-    FOREIGN KEY (problem_id) REFERENCES problem(id)--,
---     CONSTRAINT UNIQUE_ROW UNIQUE (id, i, j)
+    PRIMARY KEY (id),
+    FOREIGN KEY (problem_id) REFERENCES problem(id),
+    CONSTRAINT UNIQUE_ROW UNIQUE (problem_id, i, j)
 );
 
 

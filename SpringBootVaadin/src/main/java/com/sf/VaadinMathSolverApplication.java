@@ -5,15 +5,18 @@ import com.sf.back.entities.Matrix;
 import com.sf.back.entities.Problem;
 import com.sf.repository.MatrixRepository;
 import com.sf.repository.ProblemRepository;
+import com.sf.service.ProblemService;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import javax.sql.DataSource;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
+import org.springframework.jdbc.core.JdbcTemplate;
 
 @SpringBootApplication
 public class VaadinMathSolverApplication {
@@ -26,13 +29,11 @@ public class VaadinMathSolverApplication {
 
     /**
      * Test data preparation
-     * @param problemRepository
-     * @param matrixRepository
+     * @param problemService
      * @return 
      */
     @Bean
-    public CommandLineRunner loadData(ProblemRepository problemRepository, 
-                                      MatrixRepository matrixRepository) {
+    public CommandLineRunner loadData(ProblemService problemService) {
         return (args) -> {
             final Problem p = new Problem();
             p.setDescription("Find all roots of given polynomial".getBytes());
@@ -78,7 +79,7 @@ public class VaadinMathSolverApplication {
             matrixes.addAll(solutions);
             
             p.setMatrixes(matrixes);
-            problemRepository.save(p);
+            problemService.save(p);
             LOG.info("test data are prepared and saved");
         };
     }
