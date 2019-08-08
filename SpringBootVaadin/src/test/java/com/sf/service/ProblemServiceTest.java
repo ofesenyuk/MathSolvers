@@ -5,7 +5,6 @@
  */
 package com.sf.service;
 
-import com.mysql.cj.x.protobuf.MysqlxDatatypes;
 import com.sf.VaadinMathSolverApplication;
 import com.sf.back.entities.Kind;
 import com.sf.back.entities.Problem;
@@ -26,18 +25,15 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
-import java.util.Objects;
 import java.util.Optional;
 import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
-import java.util.stream.Stream;
 import javax.persistence.Table;
 import javax.sql.DataSource;
 import javax.transaction.Transactional;
-import org.assertj.core.util.Arrays;
 import org.junit.After;
 import org.junit.AfterClass;
 import org.junit.Before;
