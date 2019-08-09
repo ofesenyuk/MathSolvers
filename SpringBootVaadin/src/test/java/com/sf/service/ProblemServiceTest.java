@@ -204,7 +204,7 @@ public class ProblemServiceTest {
         ProblemDTO problemDTO = new ProblemDTO();
         problemDTO.setDescription(DESCRIPTION);
         problemDTO.setKind(Kind.POLYNOMIAL);
-        problemDTO.setProblemPrecision(24);
+        problemDTO.setProblemPrecision("24");
         problemDTO
             .setConditionArray(new String[][]{{"1.0", "2.0", "3.0", "4.0"}});
         
@@ -341,7 +341,7 @@ public class ProblemServiceTest {
                 problemDTO.setId(rs.getLong(ID));
                 problemDTO.setDescription(rs.getBytes(DESCRIPTION));
                 problemDTO.setKind(Kind.valueOf(rs.getString(KIND)));
-                problemDTO.setProblemPrecision(rs.getInt(PROBLEM_PRECISION));
+                problemDTO.setProblemPrecision(rs.getString(PROBLEM_PRECISION));
             }
             
             final Integer i = Integer.valueOf(rs.getString(I));

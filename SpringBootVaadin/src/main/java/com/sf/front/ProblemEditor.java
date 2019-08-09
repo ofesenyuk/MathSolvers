@@ -22,6 +22,7 @@ import com.vaadin.flow.shared.Registration;
 import com.vaadin.flow.spring.annotation.SpringComponent;
 import com.vaadin.flow.spring.annotation.UIScope;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -44,10 +45,10 @@ public class ProblemEditor extends VerticalLayout implements KeyNotifier {
     Button delete = new Button("Delete", VaadinIcon.TRASH.create());
     
     HorizontalLayout solutionLayout = new HorizontalLayout();
-    Details solutionButton = new Details("Solution", solutionLayout);
+    Details solutionDetails = new Details("Solution", solutionLayout);
     
     HorizontalLayout actions = new HorizontalLayout(save, cancel, delete, 
-        solutionButton);
+        solutionDetails);
     HorizontalLayout matrixInput = new HorizontalLayout();
     
     TextArea description = new TextArea("description");
@@ -84,9 +85,9 @@ public class ProblemEditor extends VerticalLayout implements KeyNotifier {
         delete.addClickListener(e -> delete());
         cancel.addClickListener(e -> editProblem(problem));
         
-        solutionButton.addThemeVariants(DetailsVariant.REVERSE, 
+        solutionDetails.addThemeVariants(DetailsVariant.REVERSE, 
                                         DetailsVariant.FILLED);
-        solutionButton.addOpenedChangeListener(this::sendSolutionRequest);
+        solutionDetails.addOpenedChangeListener(this::getSolution);
         
         kind.addValueChangeListener(this::onKindSelect);
         dimension.addValueChangeListener(this::onDimensionChange);
@@ -161,16 +162,21 @@ public class ProblemEditor extends VerticalLayout implements KeyNotifier {
         if (conditionArray == null) {
             return;
         }
-        final int nRows = conditionArray.length;
-        final int nCols = conditionArray[0].length;
+        drawArrayInHorizontalLayout(conditionArray, matrixInput);
+    }
+
+    private void drawArrayInHorizontalLayout(final String[][] arr, 
+            HorizontalLayout layout) {
+        final int nRows = arr.length;
+        final int nCols = arr[0].length;
         VerticalLayout[] matrixInputCols = new VerticalLayout[nCols];
         for (int j = 0; j < nCols; j++) {
             matrixInputCols[j] = new VerticalLayout();
         }
-        matrixInput.removeAll();
-        matrixInput.add(matrixInputCols);
+        layout.removeAll();
+        layout.add(matrixInputCols);
         for (int i = 0; i < nRows; i++) {
-            String[] row = conditionArray[i];
+            String[] row = arr[i];
             String rowNo = nRows > 1 ? String.valueOf(i)  + " " : "";
             for (int j = 0; j < row.length; j++) {
                 final TextField cell = new TextField();
@@ -251,11 +257,31 @@ public class ProblemEditor extends VerticalLayout implements KeyNotifier {
         problem.setDescription(description.getValue());
     }
 
-    private Registration sendSolutionRequest(Details.OpenedChangeEvent e) {
+    private void getSolution(Details.OpenedChangeEvent e) {
         if (e.isOpened()) {
-            problem.setSolution(service.getSolution(problem.getId()));
+            Map<String, String[][]> solution = problem.getSolution();            
+            if (solution == null || solution.isEmpty()) {
+                problem.setSolution(service.getSolution(problem.getId()));
+                solution = problem.getSolution();
+            }
+            buildSolutionLayout(solution);
         }
-        return null;
+    }
+
+    private void buildSolutionLayout(Map<String, String[][]> solution) {
+        solutionLayout.removeAll();
+        if (solution == null || solution.isEmpty()) {
+            return;
+        }
+        if (solution.size() == 1) {
+            final String[][] solutionArr = solution.values().stream()
+                    .findAny()
+                    .get();
+            drawArrayInHorizontalLayout(solutionArr, solutionLayout);
+            solutionLayout.setEnabled(false);
+        } else {
+            throw new UnsupportedOperationException("solutions with description are not supported");
+        }
     }
     
     public interface ChangeHandler {

@@ -17,7 +17,7 @@ import groovy.transform.*;
 class ProblemDTO implements Cloneable {
     Long id;
     String description;
-    Integer problemPrecision;
+    String problemPrecision;
     String[][] conditionArray;
     Map<String,String[][]> solution;
     Kind kind;

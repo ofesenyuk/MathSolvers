@@ -362,6 +362,12 @@ public class ProblemService {
             .filter(Objects::nonNull)
             .collect(Collectors.toList());
         checkForCoincidingPositions(conditionMatrixes);
+        
+        List<Matrix> solutionMatrixes = problem.getMatrixes().stream()
+            .filter(m -> !m.getIsCondition())
+            .filter(Objects::nonNull)
+            .collect(Collectors.toList());
+        checkForCoincidingPositions(solutionMatrixes);
     }
 
     private void checkForCoincidingPositions(List<Matrix> matrixes) {
@@ -374,10 +380,6 @@ public class ProblemService {
             throw new IllegalArgumentException("there are coinciding pairs "
                     + "among matrix indexes:" + indexesList);
         }
-        final Optional<Integer> maxI = matrixes.stream()
-                .map(m -> m.getI())
-                .filter(Objects::nonNull)
-                .max(Comparator.comparing(Integer::valueOf));
     }
 }
 

@@ -3,20 +3,16 @@ package com.sf;
 import com.sf.back.entities.Kind;
 import com.sf.back.entities.Matrix;
 import com.sf.back.entities.Problem;
-import com.sf.repository.MatrixRepository;
-import com.sf.repository.ProblemRepository;
 import com.sf.service.ProblemService;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-import javax.sql.DataSource;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
-import org.springframework.jdbc.core.JdbcTemplate;
 
 @SpringBootApplication
 public class VaadinMathSolverApplication {
@@ -69,7 +65,7 @@ public class VaadinMathSolverApplication {
             x1.setParentProblem(p);
             final Matrix x2 = new Matrix();
             x2.setI(0);
-            x2.setJ(0);
+            x2.setJ(1);
             x2.setFloatValue(1.0);
             x2.setIsCondition(false);
             x2.setParentProblem(p);
