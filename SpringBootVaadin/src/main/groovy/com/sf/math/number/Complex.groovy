@@ -29,5 +29,45 @@ class Complex extends Number {
     int intValue() {
         return x?.intValue();
     }
+    
+    Complex plus(Number op) {
+        return new Complex(x: x + op, y: y);
+    }
+    
+    Complex plus(Complex op) {
+        return new Complex(x: x + op.x, y: y + op.y);
+    }
+    
+    Complex minus(Number op) {
+        return new Complex(x: x - op, y: y);
+    }
+    
+    Complex minus(Complex op) {
+        return new Complex(x: x - op.x, y: y - op.y);
+    }
+    
+    Complex multiply(Number op) {
+        return new Complex(x: x * op, y: y * op);
+    }
+    
+    Complex multiply(Complex op) {
+        return new Complex(x: x * op.x - y * op.y, y: x * op.y + y *op.x);
+    }
+    
+    Complex div(Number op) {
+        return new Complex(x: (x / op), y: (y / op));
+    }
+    
+    Complex div(Complex op) {
+        return this * op.conjugate() / op.abs2();
+    }
+    
+    Complex conjugate() {
+        return new Complex(x: x, y: -y);
+    }
+    
+    Number abs2() {
+        return x *x + y *y;
+    }
 }
 
