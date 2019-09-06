@@ -83,6 +83,14 @@ class Polynomial {
         return new Polynomial(newCoeffs); 
     }
     
+    Polynomial multiply(Number op) {
+        return new Polynomial(coefficients.collect{c -> c * op});
+    }
+    
+    Polynomial multiply(Polynomial op) {
+        return op;
+    }
+    
     private List<Number> keepNotNullTail(List<Number> list) {
         LinkedList notNullTail = new LinkedList();
         for (int i = list.size() - 1; i >= 0; i--) {
@@ -92,7 +100,7 @@ class Polynomial {
             }
             notNullTail.addFirst(e);
         }
-        return notNullTail;
+        return new ArrayList(notNullTail);
     }
     
     private boolean areEmptyCoefficientsPresent(Polynomial p2) {
