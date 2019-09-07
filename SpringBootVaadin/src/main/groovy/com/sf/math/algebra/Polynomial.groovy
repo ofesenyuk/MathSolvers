@@ -28,7 +28,7 @@ class Polynomial {
     Polynomial plus(Number op) {
         if (coefficients && !coefficients.isEmpty()) {
             List<Number> newCoeff = coefficients.stream()
-                .collect(Collectors.toList());
+            .collect(Collectors.toList());
             newCoeff[0] += op ?: 0;
             return new Polynomial(newCoeff);
         }
@@ -37,7 +37,7 @@ class Polynomial {
         
     Polynomial plus(Polynomial p2) {
         if (areEmptyCoefficientsPresent(p2)) {
-                throw new NullPointerException("at least, one of coefficients is empty");
+            throw new NullPointerException("at least, one of coefficients is empty");
         }
         
         int nMax = Math.max(coefficients.size(), p2.coefficients.size());        
@@ -57,7 +57,7 @@ class Polynomial {
     Polynomial minus(Number op) {
         if (coefficients && !coefficients.isEmpty()) {
             List<Number> newCoeff = coefficients.stream()
-                .collect(Collectors.toList());
+            .collect(Collectors.toList());
             newCoeff[0] -= op ?: 0;
             return new Polynomial(newCoeff);
         }
@@ -66,7 +66,7 @@ class Polynomial {
         
     Polynomial minus(Polynomial p2) {
         if (areEmptyCoefficientsPresent(p2)) {
-                throw new NullPointerException("at least, one of coefficients is empty");
+            throw new NullPointerException("at least, one of coefficients is empty");
         }
         
         int nMax = Math.max(coefficients.size(), p2.coefficients.size());        
@@ -88,7 +88,20 @@ class Polynomial {
     }
     
     Polynomial multiply(Polynomial op) {
-        return op;
+        Map<Integer,Number> powerToCoeff = [:];
+        def thisRange = 0..<coefficients.size();
+        def opRange = 0..<op.coefficients.size();
+        thisRange.each{i -> 
+            Number a = coefficients[i];
+            opRange.each{j -> 
+                Integer powNew = i + j;
+                Number b = op.coefficients[j];
+                powerToCoeff.put(powNew, (powerToCoeff.get(powNew)?:0) + a * b);
+                println "a,b " + a + "," + b + " " + powerToCoeff.get(powNew);       
+            }
+        }
+        println "powerToCoeff " + powerToCoeff;
+        return new Polynomial(new ArrayList(powerToCoeff.values()));
     }
     
     private List<Number> keepNotNullTail(List<Number> list) {
