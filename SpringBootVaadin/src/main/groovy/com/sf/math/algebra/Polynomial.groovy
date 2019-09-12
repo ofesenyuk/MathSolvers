@@ -40,17 +40,11 @@ class Polynomial {
             throw new NullPointerException("at least, one of coefficients is empty");
         }
         
-        int nMax = Math.max(coefficients.size(), p2.coefficients.size());        
-        LinkedList newCoeffs = new LinkedList();
-        for (int i = nMax - 1; i >=0; i--) {
+        int nMax = Math.max(coefficients.size(), p2.coefficients.size()); 
+        List<Number> newCoeffs = (0..nMax).collect{i -> 
             Number newCoeff = i < coefficients.size() ? coefficients[i] : 0;
             newCoeff += i < p2.coefficients.size() ? p2.coefficients[i] : 0;
-            
-            if (newCoeffs.isEmpty() && newCoeff == 0) {
-                continue;
-            }
-            newCoeffs.addFirst(newCoeff);
-        }
+        };
         return new Polynomial(newCoeffs); 
     }
         
@@ -70,16 +64,10 @@ class Polynomial {
         }
         
         int nMax = Math.max(coefficients.size(), p2.coefficients.size());        
-        LinkedList newCoeffs = new LinkedList();
-        for (int i = nMax - 1; i >=0; i--) {
+        List<Number> newCoeffs = (0..nMax).collect{i -> 
             Number newCoeff = i < coefficients.size() ? coefficients[i] : 0;
             newCoeff -= i < p2.coefficients.size() ? p2.coefficients[i] : 0;
-            
-            if (newCoeffs.isEmpty() && newCoeff == 0) {
-                continue;
-            }
-            newCoeffs.addFirst(newCoeff);
-        }
+        };
         return new Polynomial(newCoeffs); 
     }
     
