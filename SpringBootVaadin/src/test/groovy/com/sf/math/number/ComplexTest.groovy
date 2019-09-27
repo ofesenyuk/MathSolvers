@@ -96,6 +96,17 @@ class ComplexTest {
     }
     
     /**
+     * Test of negative method, of class Complex.
+     */
+    @Test
+    public void testNegative() {
+        System.out.println("testNegative");
+        Complex result = -new Complex(x: -2, y: 3);
+        final Complex expResult = new Complex(x: 2, y: -3);
+        assertEquals("x-s are not equal", expResult.x, result.x, 0.0);
+        assertEquals("y-s are not equal", expResult.y, result.y, 0.0);
+    }
+    /**
      * Test of divide method, of class Complex.
      */
     @Test

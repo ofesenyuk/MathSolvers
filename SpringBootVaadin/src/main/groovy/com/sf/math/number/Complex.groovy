@@ -69,5 +69,13 @@ class Complex extends Number {
     Number abs2() {
         return x *x + y *y;
     }
+    
+    Complex negative() {
+        new Complex(x: -x, y: -y);
+    }
+    
+    String toString() {
+        return "($x, $y)";
+    }
 }
 

@@ -6,6 +6,7 @@
 
 package com.sf.math.algebra
 
+import com.sf.math.number.Complex
 import java.util.stream.Collectors;
 
 /**
@@ -22,14 +23,40 @@ class Polynomial {
     }
     
     static Polynomial fromRoots(List<Number> roots) {
+        if (!roots) {
+            return new Polynomial(null);
+        }
         
-    }    
+        Polynomial result = new Polynomial([1]);
+        for (int i = 0; i < roots.size(); i++) {
+            result = new Polynomial([-roots[i], 1]) * result;
+//            println 'result ' + result.coefficients + ' i ' + i + ' ' + new Polynomial([-roots[i], 1]).coefficients;
+        }
+        return result;
+    } 
+    
+    Number value(Number x) {
+        if (!coefficients) {
+            return 0;
+        }
+        
+        Number result = coefficients.last();   
+        for (int i = coefficients.size() - 2; i >= 0; i--) {
+            result = coefficients[i]  + (x instanceof Complex ? x * result : result * x);
+        }
+        return result;
+    }
         
     Polynomial plus(Number op) {
         if (coefficients && !coefficients.isEmpty()) {
             List<Number> newCoeff = coefficients.stream()
             .collect(Collectors.toList());
-            newCoeff[0] += op ?: 0;
+            if (op) {
+                if (op instanceof Complex) {
+                    newCoeff[0] = new Complex(x: newCoeff[0], 0);
+                }
+                newCoeff[0] += op;
+            }
             return new Polynomial(newCoeff);
         }
         return new Polynomial([op]); 
@@ -43,7 +70,11 @@ class Polynomial {
         int nMax = Math.max(coefficients.size(), p2.coefficients.size()); 
         List<Number> newCoeffs = (0..nMax).collect{i -> 
             Number newCoeff = i < coefficients.size() ? coefficients[i] : 0;
-            newCoeff += i < p2.coefficients.size() ? p2.coefficients[i] : 0;
+            Number c2 = i < p2.coefficients.size() ? p2.coefficients[i] : 0;
+            if (c2 instanceof Complex && !(newCoeff instanceof Complex)) {
+                newCoeff = new Complex(x: newCoeff, 0);
+            }
+            newCoeff += c2;
         };
         return new Polynomial(newCoeffs); 
     }
@@ -52,7 +83,12 @@ class Polynomial {
         if (coefficients && !coefficients.isEmpty()) {
             List<Number> newCoeff = coefficients.stream()
             .collect(Collectors.toList());
-            newCoeff[0] -= op ?: 0;
+            if (op) {
+                if (op instanceof Complex) {
+                    newCoeff[0] = new Complex(x: newCoeff[0], 0);
+                }
+                newCoeff[0] -= op;
+            }
             return new Polynomial(newCoeff);
         }
         return new Polynomial([op]); 
@@ -66,13 +102,25 @@ class Polynomial {
         int nMax = Math.max(coefficients.size(), p2.coefficients.size());        
         List<Number> newCoeffs = (0..nMax).collect{i -> 
             Number newCoeff = i < coefficients.size() ? coefficients[i] : 0;
-            newCoeff -= i < p2.coefficients.size() ? p2.coefficients[i] : 0;
+            Number c2 = i < p2.coefficients.size() ? p2.coefficients[i] : 0;
+            if (c2 instanceof Complex && !(newCoeff instanceof Complex)) {
+                newCoeff = new Complex(x: newCoeff, 0);
+            }
+            newCoeff -= c2;
         };
         return new Polynomial(newCoeffs); 
     }
     
     Polynomial multiply(Number op) {
-        return new Polynomial(coefficients.collect{c -> c * op});
+        return new Polynomial(coefficients.collect{c -> 
+            if (!c || !op) {
+                return 0;
+            }
+            if (op instanceof Complex) {
+                return op * c;
+            }
+            return c * op;
+        });
     }
     
     Polynomial multiply(Polynomial op) {
@@ -80,15 +128,17 @@ class Polynomial {
         def thisRange = 0..<coefficients.size();
         def opRange = 0..<op.coefficients.size();
         thisRange.each{i -> 
-            Number a = coefficients[i];
+            Number a = coefficients[i]?:0;
             opRange.each{j -> 
                 Integer powNew = i + j;
-                Number b = op.coefficients[j];
-                powerToCoeff.put(powNew, (powerToCoeff.get(powNew)?:0) + a * b);
-                println "a,b " + a + "," + b + " " + powerToCoeff.get(powNew);       
+                Number b = op.coefficients[j]?:0;
+                Number factor2 = (a instanceof Complex) ? a * b : b * a;
+                Number factor1 = (powerToCoeff.get(powNew)?:0);
+                println "a $a b $b factor1 $factor1";
+                Number res = (factor2 instanceof Complex) ? factor2 + factor1 : factor1 + factor2;
+                powerToCoeff.put(powNew, res);      
             }
         }
-        println "powerToCoeff " + powerToCoeff;
         return new Polynomial(new ArrayList(powerToCoeff.values()));
     }
     
