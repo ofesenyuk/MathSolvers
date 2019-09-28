@@ -128,7 +128,7 @@ class PolynomialTest {
         assertEquals(INEQUAL_COEFFICIENTS, expResult.coefficients, result.coefficients);        
         
         List<Number> roots = [2.2, new Complex(x: 3.1, y: 2.5), new Complex(x: 3.1, y: -2.5), 0];
-//        List<Number> roots = [2, new Complex(x: 1, y: 3)]; // x^2 - (3 + 3i)x + (2 + 6i)
+        //        List<Number> roots = [2, new Complex(x: 1, y: 3)]; // x^2 - (3 + 3i)x + (2 + 6i)
         p1 = Polynomial.fromRoots(roots);
         roots.each(){ 
             Number val1 = p1.value(it);
@@ -155,6 +155,54 @@ class PolynomialTest {
     }
     
     /**
+     * Test of div method, of class Polynomial.
+     */
+    @Test
+    public void testDiv() {
+        System.out.println("testDiv");
+        Polynomial p1 = new Polynomial([6, -12]);
+        Polynomial expResult = new Polynomial([2, -4]);
+        Polynomial result = p1 / 3;
+        def range = 0..<expResult.coefficients.size();
+        range.each{assertEquals(INEQUAL_COEFFICIENTS, expResult.coefficients[it], result.coefficients[it], 0)};        
+        
+        final Polynomial p2 = new Polynomial([3, 4]);
+        expResult = new Polynomial([3, 10, 8]);
+        Polynomial result1 = p1 * p2;
+        assertEquals(INEQUAL_COEFFICIENTS, expResult.coefficients, result1.coefficients);
+        
+        result = new Polynomial([-2, 1]) * new Polynomial([4, 2, 1]);
+        expResult = new Polynomial([-8, 0, 0, 1]);
+        assertEquals(INEQUAL_COEFFICIENTS, expResult.coefficients, result.coefficients);        
+        
+        List<Number> roots = [2.2, new Complex(x: 3.1, y: 2.5), new Complex(x: 3.1, y: -2.5), 0];
+        //        List<Number> roots = [2, new Complex(x: 1, y: 3)]; // x^2 - (3 + 3i)x + (2 + 6i)
+        p1 = Polynomial.fromRoots(roots);
+        roots.each(){ 
+            Number val1 = p1.value(it);
+            println 'root ' + it + ' val ' + val1;
+            if (val1 instanceof Complex) {
+                assertEquals(ZERO_AT_ROOT, 0, val1.x, 0); 
+                assertEquals(ZERO_AT_ROOT, 0, val1.y, 0); 
+            } else {
+                assertEquals(ZERO_AT_ROOT, 0, val1, 0); 
+            }
+        }
+        
+    }
+    
+    /**
+     * Test of div null method, of class Polynomial.
+     */
+    @Test(expected = NullPointerException.class)
+    public void testDivNull() {
+        System.out.println("testDivNull");
+        Polynomial p1 = new Polynomial([1, 2]);
+        
+        new Polynomial([]) / p1;
+    }
+    
+    /**
      * Test of fromRoots method, of class Polynomial.
      */
     @Test
@@ -166,3 +214,4 @@ class PolynomialTest {
         assertEquals(ZERO_AT_ROOT, 0, Polynomial.fromRoots([root]).value(root));
     }
 }
+
