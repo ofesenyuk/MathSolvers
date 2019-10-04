@@ -166,9 +166,11 @@ class PolynomialTest {
         def range = 0..<expResult.coefficients.size();
         range.each{assertEquals(INEQUAL_COEFFICIENTS, expResult.coefficients[it], result.coefficients[it], 0)};        
         
-        final Polynomial p2 = new Polynomial([3, 4]);
-        expResult = new Polynomial([3, 10, 8]);
-        Polynomial result1 = p1 * p2;
+        final int remainder = 5;
+        p1 = Polynomial.fromRoots([1, 2, 3]) + remainder;
+        final Polynomial p2 = Polynomial.fromRoots([2, 3]);
+        expResult = Polynomial.fromRoots([1]);
+        Polynomial result1 = p1 / p2;
         assertEquals(INEQUAL_COEFFICIENTS, expResult.coefficients, result1.coefficients);
         
         result = new Polynomial([-2, 1]) * new Polynomial([4, 2, 1]);
