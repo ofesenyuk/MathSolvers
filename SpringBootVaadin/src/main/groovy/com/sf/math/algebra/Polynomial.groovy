@@ -133,8 +133,7 @@ class Polynomial {
                 Integer powNew = i + j;
                 Number b = op.coefficients[j]?:0;
                 Number factor2 = (a instanceof Complex) ? a * b : b * a;
-                Number factor1 = (powerToCoeff.get(powNew)?:0);
-                println "a $a b $b factor1 $factor1";
+                Number factor1 = powerToCoeff.getOrDefault(powNew, 0);
                 Number res = (factor2 instanceof Complex) ? factor2 + factor1 : factor1 + factor2;
                 powerToCoeff.put(powNew, res);      
             }
@@ -144,8 +143,7 @@ class Polynomial {
     
     Polynomial div(Number op) {
         return new Polynomial(coefficients.collect{c -> 
-                if (!c
-                ) {
+                if (!c) {
                     return 0;
                 }
                 if (op instanceof Complex && !(c instanceof Complex)) {
@@ -156,22 +154,27 @@ class Polynomial {
     }
     
     Polynomial div(Polynomial op) {
-        Map<Integer,Number> powerToCoeff = [:];
-        def thisRange = 0..<coefficients.size();
-        def opRange = 0..<op.coefficients.size();
-        thisRange.each{i -> 
-            Number a = coefficients[i]?:0;
-            opRange.each{j -> 
-                Integer powNew = i + j;
-                Number b = op.coefficients[j]?:0;
-                Number factor2 = (a instanceof Complex) ? a * b : b * a;
-                Number factor1 = (powerToCoeff.get(powNew)?:0);
-                println "a $a b $b factor1 $factor1";
-                Number res = (factor2 instanceof Complex) ? factor2 + factor1 : factor1 + factor2;
-                powerToCoeff.put(powNew, res);      
-            }
+        if (coefficients.size() < op.coefficients.size()) {
+            return new Polynomial([0]);
         }
-        return new Polynomial(new ArrayList(powerToCoeff.values()));
+        Polynomial floatOp = new Polynomial(op.coefficients.collect{
+            if (it instanceof Integer || it instanceof Long) {
+                return c.doubleValue();
+            }
+            if (it instanceof BigInteger) {
+                return new BigDecimal(c);
+            }
+            return c;
+        });
+        List<Number> newCoeffs = [];
+        def range = (coefficients.size() - 1)..(op.coefficients.size() - 1);
+        Polynomial res = this;
+        range.each{
+            Number c = res.coefficients[it] / floatOp.coefficients(it);
+            newCoeffs << c;
+            res -= (floatOp * res.coefficients[it]) / floatOp.coefficients(it); 
+        };
+        return new Polynomial(newCoeffs);
     }
     
     private List<Number> keepNotNullTail(List<Number> list) {
