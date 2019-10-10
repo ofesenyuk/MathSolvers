@@ -159,22 +159,22 @@ class Polynomial {
         }
         Polynomial floatOp = new Polynomial(op.coefficients.collect{
             if (it instanceof Integer || it instanceof Long) {
-                return c.doubleValue();
+                return it.doubleValue();
             }
             if (it instanceof BigInteger) {
-                return new BigDecimal(c);
+                return new BigDecimal(it);
             }
-            return c;
+            return it;
         });
         List<Number> newCoeffs = [];
         def range = (coefficients.size() - 1)..(op.coefficients.size() - 1);
         Polynomial res = this;
         range.each{
-            Number c = res.coefficients[it] / floatOp.coefficients(it);
+            Number c = res.coefficients[it] / floatOp.coefficients.last();
             newCoeffs << c;
-            res -= (floatOp * res.coefficients[it]) / floatOp.coefficients(it); 
+            res -= (shiftToPower(floatOp, it) * res.coefficients[it]) / floatOp.coefficients.last(); 
         };
-        return new Polynomial(newCoeffs);
+        return new Polynomial(newCoeffs.reverse());
     }
     
     private List<Number> keepNotNullTail(List<Number> list) {
@@ -191,5 +191,16 @@ class Polynomial {
     
     private boolean areEmptyCoefficientsPresent(Polynomial p2) {
         coefficients == null || coefficients.isEmpty() || p2.coefficients == null || p2.coefficients.isEmpty();
+    }
+    
+    private Polynomial shiftToPower(Polynomial p, int power) {
+        if (power <= p.coefficients.size() - 1) {
+            return new Polynomial(p.coefficients);
+        }
+        List<Number> newCoeffs = [];
+        def zeroRange = p.coefficients.size()..power;
+        zeroRange.each{newCoeffs << 0};
+        newCoeffs.addAll(p.coefficients);
+        return new Polynomial(newCoeffs);
     }
 }
