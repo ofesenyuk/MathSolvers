@@ -127,12 +127,12 @@ class PolynomialTest {
         expResult = new Polynomial([-8, 0, 0, 1]);
         assertEquals(INEQUAL_COEFFICIENTS, expResult.coefficients, result.coefficients);        
         
-        List<Number> roots = [2.2, new Complex(x: 3.1, y: 2.5), new Complex(x: 3.1, y: -2.5), 0];
+        // to debug use simplier numbers
+        List<Number> roots = [2.2, new Complex(x: 3.1, y: 2.5), new Complex(x: 3.1, y: -2.5), 0]; 
         //        List<Number> roots = [2, new Complex(x: 1, y: 3)]; // x^2 - (3 + 3i)x + (2 + 6i)
         p1 = Polynomial.fromRoots(roots);
         roots.each(){ 
             Number val1 = p1.value(it);
-            println 'root ' + it + ' val ' + val1;
             if (val1 instanceof Complex) {
                 assertEquals(ZERO_AT_ROOT, 0, val1.x, 0); 
                 assertEquals(ZERO_AT_ROOT, 0, val1.y, 0); 
@@ -166,30 +166,13 @@ class PolynomialTest {
         def range = 0..<expResult.coefficients.size();
         range.each{assertEquals(INEQUAL_COEFFICIENTS, expResult.coefficients[it], result.coefficients[it], 0)};        
         
-        final int remainder = 5;
-        p1 = Polynomial.fromRoots([1, 2, 3]) + remainder;
-        final Polynomial p2 = Polynomial.fromRoots([2, 3]);
+        final int remainder = 0;
+        p1 = Polynomial.fromRoots([1, 2, 3]) + remainder; // x*x*x - 6*x*x +11*x - 6 + 5
+        final Polynomial p2 = Polynomial.fromRoots([2, 3]); // x*x - 5*x + 6
         expResult = Polynomial.fromRoots([1]);
-        Polynomial result1 = p1 / p2;
-        assertEquals(INEQUAL_COEFFICIENTS, expResult.coefficients, result1.coefficients);
+        result = p1 / p2;
+        range.each{assertEquals(INEQUAL_COEFFICIENTS, expResult.coefficients[it], result.coefficients[it], 0)};
         
-        result = new Polynomial([-2, 1]) * new Polynomial([4, 2, 1]);
-        expResult = new Polynomial([-8, 0, 0, 1]);
-        assertEquals(INEQUAL_COEFFICIENTS, expResult.coefficients, result.coefficients);        
-        
-        List<Number> roots = [2.2, new Complex(x: 3.1, y: 2.5), new Complex(x: 3.1, y: -2.5), 0];
-        //        List<Number> roots = [2, new Complex(x: 1, y: 3)]; // x^2 - (3 + 3i)x + (2 + 6i)
-        p1 = Polynomial.fromRoots(roots);
-        roots.each(){ 
-            Number val1 = p1.value(it);
-            println 'root ' + it + ' val ' + val1;
-            if (val1 instanceof Complex) {
-                assertEquals(ZERO_AT_ROOT, 0, val1.x, 0); 
-                assertEquals(ZERO_AT_ROOT, 0, val1.y, 0); 
-            } else {
-                assertEquals(ZERO_AT_ROOT, 0, val1, 0); 
-            }
-        }
         
     }
     
