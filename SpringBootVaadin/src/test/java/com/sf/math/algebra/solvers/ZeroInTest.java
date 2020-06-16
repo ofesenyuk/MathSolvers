@@ -14,8 +14,6 @@ import org.junit.BeforeClass;
 import org.junit.Test;
 import org.junit.Assert;
 
-import com.sf.math.algebra.solvers.IntervalSolver;
-import java.math.MathContext;
 import java.math.RoundingMode;
 
 /**
@@ -23,6 +21,8 @@ import java.math.RoundingMode;
  * @author OFeseniuk
  */
 public class ZeroInTest {
+
+    private static final int MAX_PRECISSION_FOUND = 420; // 520
     
     public ZeroInTest() {
     }
@@ -57,7 +57,7 @@ public class ZeroInTest {
         ZeroIn instance = new ZeroIn();
         Double result = instance.find(f, ax, bx, eps);
         Assert.assertEquals(String
-            .format("Solution with given precission %f is not found", 2 * eps), 
+            .format("Solution with given precission %f is not found", 10 * eps), 
             expResult, result, 10 * eps);
     }
 
@@ -103,7 +103,7 @@ public class ZeroInTest {
     @Test
     public void testFind_RootForBigDecimal() {
         System.out.println("testFind_RootForBigDecimal");
-        final int scale = 420;
+        final int scale = MAX_PRECISSION_FOUND;
         BigDecimal expResult = IntervalSolver.THREE.divide(new BigDecimal(17), 
                 scale, RoundingMode.CEILING);        
         Function<BigDecimal, BigDecimal> f = x -> 
@@ -125,7 +125,7 @@ public class ZeroInTest {
     @Test
     public void testFind_MaxForBigDecimal() {
         System.out.println("testFind_MaxForBigDecimal");
-        final int scale = 420;
+        final int scale = MAX_PRECISSION_FOUND;
         BigDecimal expResult = IntervalSolver.THREE.divide(new BigDecimal(17), 
                 scale, RoundingMode.CEILING);        
         Function<BigDecimal, BigDecimal> f = x -> x.subtract(expResult).pow(2)
@@ -148,7 +148,7 @@ public class ZeroInTest {
     @Test
     public void testFind_RootInMaximumForBigDecimal() {
         System.out.println("testFind_MaxForBigDecimal");
-        final int scale = 420;
+        final int scale = MAX_PRECISSION_FOUND;
         BigDecimal expResult = IntervalSolver.THREE.divide(new BigDecimal(17), 
                 scale, RoundingMode.CEILING);        
         Function<BigDecimal, BigDecimal> f = x -> x.subtract(expResult).pow(2)
