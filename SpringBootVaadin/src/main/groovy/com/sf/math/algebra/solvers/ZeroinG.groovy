@@ -6,28 +6,28 @@
 
 package com.sf.math.algebra.solvers
 
-import groovy.transform.Canonical;
+import com.helger.commons.math.MathHelper;
 
 /**
- *
+ * Solves equation f = 0 in given interval
  * @author OFeseniuk
  */
-@Canonical
 class ZeroinG {
     def a, b, c, d, e, xm, tol1  = 1;
     
     def fa, fb, fc;
     
+    /**
+     * Solves equation f = 0 in given interval
+     */
     def find(final Closure f, def ax, def bx, def eps) {
         def p, q, r, s;
         
-//        println "ZeroinG before fa ax = $ax "+ ax.getClass();
         a = ax;
         b = bx;
         fa = f.call(a);
         fb = f.call(b);
         centralAssignments();
-//        println "ZeroinG before while";
         while(true) {
             if (abs(fc).compareTo(abs(fb)) < 0) {
                 a = b;
@@ -105,15 +105,11 @@ class ZeroinG {
     private BigDecimal sign(BigDecimal tol1B, BigDecimal xmB) {
         return xmB.compareTo(BigDecimal.ZERO) >= 0 
         ? tol1B.abs() 
-    : tol1B.abs().negate();
+        : tol1B.abs().negate();
     }
     
-    private Double abs(Double x) {
-        return Math.abs(x);
-    }
-    
-    private BigDecimal abs(BigDecimal x) {
-        return x.abs();
+    private Number abs(Number x) {
+        MathHelper.abs(x);
     }
     
     private Boolean isPositive(Double x) {

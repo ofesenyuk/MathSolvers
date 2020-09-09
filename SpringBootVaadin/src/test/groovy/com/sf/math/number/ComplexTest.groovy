@@ -31,11 +31,11 @@ class ComplexTest {
         
         result = new Complex(x: 1, y: 2) + 1.0;
         assertEquals("x-s are not equal", expResult.x, result.x, 0.0);
-        assertEquals("y-s are not equal", expResult.y, result.y);
+        assertEquals("y-s are not equal", expResult.y, result.y, 0.0);
         
         result = new Complex(x: 1, y: 2) + BigDecimal.ONE;
         assertEquals("x-s are not equal", expResult.x, result.x, 0.0);
-        assertEquals("y-s are not equal", expResult.y, result.y);
+        assertEquals("y-s are not equal", expResult.y, result.y, 0.0);
         
         result = new Complex(x: 1, y: -1) + new Complex(x: 1, y: 3);
         assertEquals("x-s are not equal", expResult.x, result.x);
@@ -55,11 +55,11 @@ class ComplexTest {
         
         result = new Complex(x: 2, y: 2) - 1.0;
         assertEquals("x-s are not equal", expResult.x, result.x, 0.0);
-        assertEquals("y-s are not equal", expResult.y, result.y);
+        assertEquals("y-s are not equal", expResult.y, result.y, 0.0);
         
         result = new Complex(x: 2, y: 2) - BigDecimal.ONE.divide(BigDecimal.ONE);
         assertEquals("x-s are not equal", expResult.x, result.x, 0.0);
-        assertEquals("y-s are not equal", expResult.y, result.y);
+        assertEquals("y-s are not equal", expResult.y, result.y, 0.0);
         
         result = new Complex(x: 3, y: -1) - new Complex(x: 2, y: -3);
         assertEquals("x-s are not equal", expResult.x, result.x);
@@ -129,5 +129,17 @@ class ComplexTest {
         result = new Complex(x: 3, y: -2) / new Complex(x: 2, y: -2); // (6 + 4)/8, (-4 + 6)/8
         assertEquals("x-s are not equal", expResult.x, result.x, 0.0);
         assertEquals("y-s are not equal", expResult.y, result.y, 0.0);
+    }
+    
+    @Test
+    public void testRoundBigDecimalToPrecision() {
+        System.out.println("testRoundBigDecimalToPrecision");
+        BigDecimal eps = new BigDecimal(30).scaleByPowerOfTen(-3);
+        Complex result = new Complex(123.45678901, 98.76543210987654)
+            .roundBigDecimalToPrecision(eps);
+        Complex expResult = new Complex(new BigDecimal("123.457"), 
+            new BigDecimal("98.765"));
+        assertEquals("x-s are not equal", expResult.x, result.x);
+        assertEquals("y-s are not equal", expResult.y, result.y);
     }
 }

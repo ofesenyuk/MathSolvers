@@ -8,30 +8,34 @@ package com.sf.math.algebra.solvers;
 import java.math.BigDecimal;
 import java.util.function.Function;
 
+import com.sf.math.number.Complex;
+
 /**
  *
  * @author sf
  * 
- * Solves equation f = 0 in given interval
+ * Solve transcendent equation, f = 0, at f and f' given
  */
-public interface IntervalSolver {
+public interface DerivativeSolver {
     
-    static final int N_ITERATIONS = 100;    
+    static final int N_ITERATIONS = 10000;    
     static final double DOUBLE_MAX_PRECISION = 1E-16;    
     
     static final BigDecimal TWO = BigDecimal.ONE.add(BigDecimal.ONE);
     static final BigDecimal THREE = new BigDecimal(3);
             
     /**
-     * Zero of a function in an interval.
+     * Zero of a function near guess point.
      * @param f function
-     * @param a from
-     * @param b to
+     * @param guess guess point
+     * @param dF derivative function
      * @param eps precision
      * @return root found
      */
     Double find(final Function<Double, Double> f, 
-            final double a, final double b, final double eps);
-    BigDecimal find(final Function<BigDecimal, BigDecimal> f, 
-            final BigDecimal a, final BigDecimal b, final BigDecimal eps);
+            final Function<Double, Double> dF, 
+            final double guess, final double eps);
+    Complex find(final Function<Complex, Complex> f, 
+            final Function<Complex, Complex> dF, 
+            final Complex guess, final BigDecimal eps);
 }

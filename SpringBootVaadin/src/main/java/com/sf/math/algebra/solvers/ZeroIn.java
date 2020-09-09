@@ -48,7 +48,8 @@ public class ZeroIn implements IntervalSolver {
         fa = f.apply(a);
         fb = f.apply(b);
         centralAssignments();
-        while(true) {
+//        while(true) {
+        for (int i = 0; i < N_ITERATIONS; i++) {
             if (Math.abs(fc) < Math.abs(fb)) {
                 a = b;
                 b = c;
@@ -94,6 +95,7 @@ public class ZeroIn implements IntervalSolver {
             d = p / q;
             finalIterationAssignments(f);
         }
+        return null;
     }
 
     @Override
@@ -119,7 +121,7 @@ public class ZeroIn implements IntervalSolver {
             tol1B = TWO.multiply(eps).multiply(bB.abs()).add(eps.divide(TWO));
             xmB = cB.subtract(bB).divide(TWO);
             if (xmB.abs().compareTo(tol1B) <= 0 
-                    || fbB.equals(BigDecimal.ZERO)) {
+                    || isZero(fbB)) {
                 return bB;
             }
             if (eB.abs().compareTo(tol1B) < 0 
@@ -216,6 +218,10 @@ public class ZeroIn implements IntervalSolver {
         return xmB.compareTo(BigDecimal.ZERO) >= 0 
                 ? tol1B.abs() 
                 : tol1B.abs().negate();
+    }
+
+    private boolean isZero(BigDecimal n) {
+        return n.compareTo(BigDecimal.ZERO) == 0;
     }
 
 }

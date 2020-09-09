@@ -28,12 +28,9 @@
     <appender-ref ref="CONTEXT"/>
   </appender>
 
-  <logger name="ibs" level="DEBUG"/>
+  <logger name="mathsolver" level="DEBUG"/>
 <!--  <logger name="ibs" level="TRACE"/> -->
-  <logger name="ibs.internal.csv" level="DEBUG"/>
-  <logger name="ibs.i18n.ExtendedCookieLocaleResolver" level="INFO"/>
   <logger name="org.springframework.web.filter.CommonsRequestLoggingFilter" level="DEBUG"/>
-  <logger name="ibs.config.ConstantsSerializer" level="DEBUG"/>
 
 <!--  <include resource="logback-${spring.profiles.active}.xml"/> -->
 
@@ -42,7 +39,7 @@
   </contextListener>
 
 
-  <root level="INFO">
+  <root level="WARN">
     <appender-ref ref="CONSOLE"/>
     <appender-ref ref="CONTEXT"/>
   </root>
