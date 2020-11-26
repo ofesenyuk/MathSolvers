@@ -1,0 +1,11 @@
+<component name="libraryTable">
+  <library name="Gradle: org.codehaus.groovy:groovy-templates:3.0.6">
+    <CLASSES>
+      <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/org.codehaus.groovy/groovy-templates/3.0.6/a87537f770e5cdbb304374e897c8d79053e3eee5/groovy-templates-3.0.6.jar!/" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES>
+      <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/org.codehaus.groovy/groovy-templates/3.0.6/1cbd1076294d220313c5ec0afa33bafbb5f0548f/groovy-templates-3.0.6-sources.jar!/" />
+    </SOURCES>
+  </library>
+</component>

@@ -1,0 +1,11 @@
+<component name="libraryTable">
+  <library name="Gradle: org.webjars.bowergithub.vaadin:vaadin-lumo-styles:1.6.0">
+    <CLASSES>
+      <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/org.webjars.bowergithub.vaadin/vaadin-lumo-styles/1.6.0/4f38bc365c4870000193a78f613db587c0f0d2aa/vaadin-lumo-styles-1.6.0.jar!/" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES>
+      <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/org.webjars.bowergithub.vaadin/vaadin-lumo-styles/1.6.0/b04f3ee8f5e43fa3b162981b50bb72fe1acabb33/vaadin-lumo-styles-1.6.0-sources.jar!/" />
+    </SOURCES>
+  </library>
+</component>

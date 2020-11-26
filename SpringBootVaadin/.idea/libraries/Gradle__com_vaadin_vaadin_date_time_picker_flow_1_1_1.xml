@@ -1,0 +1,11 @@
+<component name="libraryTable">
+  <library name="Gradle: com.vaadin:vaadin-date-time-picker-flow:1.1.1">
+    <CLASSES>
+      <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/com.vaadin/vaadin-date-time-picker-flow/1.1.1/2e754a8f2b07ce62e3a72a1f225591561a35c8f1/vaadin-date-time-picker-flow-1.1.1.jar!/" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES>
+      <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/com.vaadin/vaadin-date-time-picker-flow/1.1.1/612433671038807928cc9dced94aab89d5c8eda8/vaadin-date-time-picker-flow-1.1.1-sources.jar!/" />
+    </SOURCES>
+  </library>
+</component>

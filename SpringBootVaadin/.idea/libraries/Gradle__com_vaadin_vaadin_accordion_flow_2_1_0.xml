@@ -1,0 +1,11 @@
+<component name="libraryTable">
+  <library name="Gradle: com.vaadin:vaadin-accordion-flow:2.1.0">
+    <CLASSES>
+      <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/com.vaadin/vaadin-accordion-flow/2.1.0/35feebc188efaf57f7c63b9596c65a14b97e8a21/vaadin-accordion-flow-2.1.0.jar!/" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES>
+      <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/com.vaadin/vaadin-accordion-flow/2.1.0/23e9bb821a78e331e7a531f4500864dfc17793f/vaadin-accordion-flow-2.1.0-sources.jar!/" />
+    </SOURCES>
+  </library>
+</component>

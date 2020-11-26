@@ -1,0 +1,11 @@
+<component name="libraryTable">
+  <library name="Gradle: com.vaadin:vaadin-material-theme:2.3.5">
+    <CLASSES>
+      <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/com.vaadin/vaadin-material-theme/2.3.5/394447be6da173034900e66f53e211b4fa3c7b75/vaadin-material-theme-2.3.5.jar!/" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES>
+      <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/com.vaadin/vaadin-material-theme/2.3.5/59a0b3260e01f0c104ccca35575571fa1c4ae442/vaadin-material-theme-2.3.5-sources.jar!/" />
+    </SOURCES>
+  </library>
+</component>

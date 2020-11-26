@@ -1,0 +1,11 @@
+<component name="libraryTable">
+  <library name="Gradle: com.vaadin:vaadin-menu-bar-flow:1.1.0">
+    <CLASSES>
+      <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/com.vaadin/vaadin-menu-bar-flow/1.1.0/4cdd9c988d8667302b713a561abc8a5e241f35fa/vaadin-menu-bar-flow-1.1.0.jar!/" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES>
+      <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/com.vaadin/vaadin-menu-bar-flow/1.1.0/5eb3fd92cc474e35edf1a8fedf989518fc60df2c/vaadin-menu-bar-flow-1.1.0-sources.jar!/" />
+    </SOURCES>
+  </library>
+</component>

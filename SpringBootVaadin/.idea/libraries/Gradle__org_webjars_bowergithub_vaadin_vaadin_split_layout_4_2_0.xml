@@ -1,0 +1,11 @@
+<component name="libraryTable">
+  <library name="Gradle: org.webjars.bowergithub.vaadin:vaadin-split-layout:4.2.0">
+    <CLASSES>
+      <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/org.webjars.bowergithub.vaadin/vaadin-split-layout/4.2.0/89dad803d5d6c994e3e3e6b3da7c1b05ae2bf817/vaadin-split-layout-4.2.0.jar!/" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES>
+      <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/org.webjars.bowergithub.vaadin/vaadin-split-layout/4.2.0/b04f3ee8f5e43fa3b162981b50bb72fe1acabb33/vaadin-split-layout-4.2.0-sources.jar!/" />
+    </SOURCES>
+  </library>
+</component>

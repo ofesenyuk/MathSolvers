@@ -1,0 +1,11 @@
+<component name="libraryTable">
+  <library name="Gradle: com.vaadin:vaadin-combo-box-flow:3.1.0">
+    <CLASSES>
+      <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/com.vaadin/vaadin-combo-box-flow/3.1.0/87827c3f5e814e7c559e47d9f89d1766e3f76327/vaadin-combo-box-flow-3.1.0.jar!/" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES>
+      <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/com.vaadin/vaadin-combo-box-flow/3.1.0/185e34e5a25aba2ddbdab8f082da0623d3c358f/vaadin-combo-box-flow-3.1.0-sources.jar!/" />
+    </SOURCES>
+  </library>
+</component>

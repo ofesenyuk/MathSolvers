@@ -1,0 +1,11 @@
+<component name="libraryTable">
+  <library name="Gradle: com.vaadin:vaadin-ordered-layout-flow:2.2.0">
+    <CLASSES>
+      <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/com.vaadin/vaadin-ordered-layout-flow/2.2.0/bc1e872d465a396ddc0255617b27ae3e288f839f/vaadin-ordered-layout-flow-2.2.0.jar!/" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES>
+      <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/com.vaadin/vaadin-ordered-layout-flow/2.2.0/d678155c6229ab8e4b503f08ea3a3a0cfddc26ba/vaadin-ordered-layout-flow-2.2.0-sources.jar!/" />
+    </SOURCES>
+  </library>
+</component>

@@ -1,0 +1,11 @@
+<component name="libraryTable">
+  <library name="Gradle: org.webjars.bowergithub.vaadin:vaadin-button:2.3.0">
+    <CLASSES>
+      <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/org.webjars.bowergithub.vaadin/vaadin-button/2.3.0/14238eeb7fdc4d8d52a1d44b1c44b691f12e4139/vaadin-button-2.3.0.jar!/" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES>
+      <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/org.webjars.bowergithub.vaadin/vaadin-button/2.3.0/b04f3ee8f5e43fa3b162981b50bb72fe1acabb33/vaadin-button-2.3.0-sources.jar!/" />
+    </SOURCES>
+  </library>
+</component>

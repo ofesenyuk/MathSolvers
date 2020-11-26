@@ -31,6 +31,7 @@ public class VaadinMathSolverApplication {
     @Bean
     public CommandLineRunner loadData(ProblemService problemService) {
         return (args) -> {
+            LOG.info("test data preparation");
             final Problem p = new Problem();
             p.setDescription("Find all roots of given polynomial".getBytes());
             p.setIsSolved(false);

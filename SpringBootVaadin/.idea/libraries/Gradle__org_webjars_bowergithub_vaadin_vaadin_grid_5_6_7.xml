@@ -1,0 +1,11 @@
+<component name="libraryTable">
+  <library name="Gradle: org.webjars.bowergithub.vaadin:vaadin-grid:5.6.7">
+    <CLASSES>
+      <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/org.webjars.bowergithub.vaadin/vaadin-grid/5.6.7/58abf4ec56d302233c50b441dd1a79b0b0eb8ba9/vaadin-grid-5.6.7.jar!/" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES>
+      <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/org.webjars.bowergithub.vaadin/vaadin-grid/5.6.7/b04f3ee8f5e43fa3b162981b50bb72fe1acabb33/vaadin-grid-5.6.7-sources.jar!/" />
+    </SOURCES>
+  </library>
+</component>

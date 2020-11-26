@@ -72,7 +72,7 @@ class ComplexTest {
     @Test
     public void testMultiply() {
         System.out.println("testMultiply");
-        final Complex expResult = new Complex(x: 6, y: -9);
+        Complex expResult = new Complex(x: 6, y: -9);
         Complex result = new Complex(x: 2, y: -3) * 3;
         assertEquals("x-s are not equal", expResult.x, result.x);
         assertEquals("y-s are not equal", expResult.y, result.y);
@@ -112,7 +112,7 @@ class ComplexTest {
     @Test
     public void testDivide() {
         System.out.println("testDivide");
-        final Complex expResult = new Complex(x: 2, y: -3);
+        Complex expResult = new Complex(x: 2, y: -3);
         Complex result = new Complex(x: 6, y: -9) / 3;
         assertEquals("x-s are not equal", expResult.x, result.x, 0.0);
         assertEquals("y-s are not equal", expResult.y, result.y, 0.0);

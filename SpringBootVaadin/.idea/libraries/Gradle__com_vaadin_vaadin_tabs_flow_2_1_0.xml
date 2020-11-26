@@ -1,0 +1,11 @@
+<component name="libraryTable">
+  <library name="Gradle: com.vaadin:vaadin-tabs-flow:2.1.0">
+    <CLASSES>
+      <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/com.vaadin/vaadin-tabs-flow/2.1.0/d702a76bb6241f7e7428d278f9a20e56e093c3ea/vaadin-tabs-flow-2.1.0.jar!/" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES>
+      <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/com.vaadin/vaadin-tabs-flow/2.1.0/25449c97d8334e1c686ca192ecf438b259253797/vaadin-tabs-flow-2.1.0-sources.jar!/" />
+    </SOURCES>
+  </library>
+</component>

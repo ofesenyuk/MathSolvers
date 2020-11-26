@@ -1,0 +1,11 @@
+<component name="libraryTable">
+  <library name="Gradle: org.webjars.bowergithub.vaadin:vaadin-accordion:1.1.0">
+    <CLASSES>
+      <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/org.webjars.bowergithub.vaadin/vaadin-accordion/1.1.0/8de024d0098f8b79dc4de55e0c16b227bcefad0b/vaadin-accordion-1.1.0.jar!/" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES>
+      <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/org.webjars.bowergithub.vaadin/vaadin-accordion/1.1.0/b04f3ee8f5e43fa3b162981b50bb72fe1acabb33/vaadin-accordion-1.1.0-sources.jar!/" />
+    </SOURCES>
+  </library>
+</component>

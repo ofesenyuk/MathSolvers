@@ -1,0 +1,11 @@
+<component name="libraryTable">
+  <library name="Gradle: org.webjars.bowergithub.vaadin:vaadin-form-layout:2.2.0">
+    <CLASSES>
+      <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/org.webjars.bowergithub.vaadin/vaadin-form-layout/2.2.0/807b732032dc0121d26337fd4e720007a478a17/vaadin-form-layout-2.2.0.jar!/" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES>
+      <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/org.webjars.bowergithub.vaadin/vaadin-form-layout/2.2.0/b04f3ee8f5e43fa3b162981b50bb72fe1acabb33/vaadin-form-layout-2.2.0-sources.jar!/" />
+    </SOURCES>
+  </library>
+</component>

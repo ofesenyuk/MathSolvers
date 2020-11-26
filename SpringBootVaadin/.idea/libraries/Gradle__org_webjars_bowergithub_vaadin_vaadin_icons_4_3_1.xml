@@ -1,0 +1,11 @@
+<component name="libraryTable">
+  <library name="Gradle: org.webjars.bowergithub.vaadin:vaadin-icons:4.3.1">
+    <CLASSES>
+      <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/org.webjars.bowergithub.vaadin/vaadin-icons/4.3.1/7a7a05812b89e78fe9869cfae2e7782f036e3e9c/vaadin-icons-4.3.1.jar!/" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES>
+      <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/org.webjars.bowergithub.vaadin/vaadin-icons/4.3.1/b04f3ee8f5e43fa3b162981b50bb72fe1acabb33/vaadin-icons-4.3.1-sources.jar!/" />
+    </SOURCES>
+  </library>
+</component>

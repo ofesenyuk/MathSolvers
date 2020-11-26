@@ -1,0 +1,11 @@
+<component name="libraryTable">
+  <library name="Gradle: com.vaadin:vaadin-upload-flow:2.2.1">
+    <CLASSES>
+      <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/com.vaadin/vaadin-upload-flow/2.2.1/8e332f810aedad890592368036b9262407b91400/vaadin-upload-flow-2.2.1.jar!/" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES>
+      <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/com.vaadin/vaadin-upload-flow/2.2.1/2cd7d55936c4b88e35122974d6201a54a1f10e0c/vaadin-upload-flow-2.2.1-sources.jar!/" />
+    </SOURCES>
+  </library>
+</component>

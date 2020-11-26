@@ -1,0 +1,11 @@
+<component name="libraryTable">
+  <library name="Gradle: com.vaadin:vaadin-spring:12.3.1">
+    <CLASSES>
+      <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/com.vaadin/vaadin-spring/12.3.1/90872b6904c04fa4a803dd5f20e389e7f7439a9b/vaadin-spring-12.3.1.jar!/" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES>
+      <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/com.vaadin/vaadin-spring/12.3.1/462e34aea79d61db5bd86954a455def5e9027df5/vaadin-spring-12.3.1-sources.jar!/" />
+    </SOURCES>
+  </library>
+</component>
