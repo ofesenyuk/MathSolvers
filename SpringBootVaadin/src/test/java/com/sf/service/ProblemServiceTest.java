@@ -7,44 +7,11 @@ package com.sf.service;
 
 import com.sf.VaadinMathSolverApplication;
 import com.sf.back.entities.Kind;
-import com.sf.back.entities.Problem;
 import com.sf.back.entities.Matrix;
+import com.sf.back.entities.Problem;
 import com.sf.repository.ProblemRepository;
 import com.sf.shared.dto.ProblemDTO;
-import java.io.UnsupportedEncodingException;
-import java.sql.Blob;
-
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.sql.Types;
-import static java.sql.Types.BOOLEAN;
-import static java.sql.Types.NUMERIC;
-import static java.sql.Types.VARCHAR;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Base64;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
-import java.util.Set;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-import java.util.stream.Collectors;
-import java.util.stream.IntStream;
-import javax.persistence.Table;
-import javax.sql.DataSource;
-import javax.transaction.Transactional;
-import org.junit.After;
-import org.junit.AfterClass;
-import org.junit.Before;
-import org.junit.BeforeClass;
-import org.junit.Test;
-import static org.junit.Assert.*;
-import org.junit.Ignore;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.*;
 import org.mockito.ArgumentCaptor;
 import org.mockito.Captor;
 import org.mockito.Mockito;
@@ -60,13 +27,30 @@ import org.springframework.jdbc.object.SqlUpdate;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.test.annotation.Rollback;
-import org.springframework.test.context.junit4.SpringRunner;
+
+import javax.persistence.Table;
+import javax.sql.DataSource;
+import javax.transaction.Transactional;
+import java.io.UnsupportedEncodingException;
+import java.sql.Blob;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Types;
+import java.util.*;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import java.util.stream.Collectors;
+import java.util.stream.IntStream;
+
+import static java.sql.Types.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNull;
 
 /**
  *
  * @author sf
  */
-@RunWith(SpringRunner.class)
+//@RunWith(SpringRunner.class)
 @SpringBootTest(
         //  SpringBootTest.WebEnvironment.MOCK,
         classes = VaadinMathSolverApplication.class)
@@ -122,20 +106,20 @@ public class ProblemServiceTest {
     public ProblemServiceTest() {
     }
 
-    @BeforeClass
+    @BeforeAll
     public static void setUpClass() {
     }
 
-    @AfterClass
+    @AfterAll
     public static void tearDownClass() {
     }
 
-    @Before
+    @BeforeEach
     public void setUp() throws UnsupportedEncodingException {
         savedProblemId = createProblem();
     }
 
-    @After
+    @AfterEach
     public void tearDown() {
     }
 
@@ -149,7 +133,7 @@ public class ProblemServiceTest {
         Set<Long> result = problemService.findAll().stream()
                 .map(ProblemDTO::getId)
                 .collect(Collectors.toSet());
-        assertEquals("id sets are not equal", expResult, result);
+        assertEquals(expResult, result, "id sets are not equal");
     }
 
     /**
@@ -161,11 +145,11 @@ public class ProblemServiceTest {
         List<Pair<ProblemDTO, Matrix>> problemMatrixes
                 = namedParameterJdbcTemplate.query(SELECT_PROBLEM,
                         Collections.singletonMap(ID, savedProblemId), this::toProblemMatrix);
-        Integer nI = 1 + problemMatrixes.stream()
+        int nI = 1 + problemMatrixes.stream()
                 .mapToInt(pm -> pm.getSecond().getI())
                 .max()
                 .getAsInt();
-        Integer nJ = 1 + problemMatrixes.stream()
+        int nJ = 1 + problemMatrixes.stream()
                 .mapToInt(pm -> pm.getSecond().getJ())
                 .max()
                 .getAsInt();
@@ -196,7 +180,7 @@ public class ProblemServiceTest {
         problemDTO.getConditionArray()[0][0] = cell + "1";
         problemService.save(problemDTO);
         final ProblemDTO problemFound = problemService.findById(savedProblemId);
-        assertEquals("Problem is not updated.", problemDTO, problemFound);
+        assertEquals(problemDTO, problemFound, "Problem is not updated.");
     }
 
     /**
@@ -220,7 +204,7 @@ public class ProblemServiceTest {
         final long savedId = problemCaptor.getValue().getId();
         problemDTO.setId(savedId);
         final ProblemDTO problemFound = problemService.findById(savedId);
-        assertEquals("Problem is not saved.", problemDTO, problemFound);
+        assertEquals(problemDTO, problemFound, "Problem is not saved.");
     }
 
     /**
@@ -234,21 +218,6 @@ public class ProblemServiceTest {
         assertNull(problemService.findById(savedProblemId));
     }
 
-    /**
-     * Test of getSolution method, of class ProblemService.
-     */
-    @Test
-    @Ignore
-    public void testGetSolution() {
-        System.out.println("getSolution");
-        Long id = null;
-        ProblemService instance = null;
-        Map expResult = null;
-        Map result = instance.getSolution(id);
-        assertEquals(expResult, result);
-        // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
-    }
 
     /**
      * Test of getSolution method, of class ProblemService.
@@ -265,8 +234,8 @@ public class ProblemServiceTest {
             String[][] resArray = result.get(key);
             for (int i = 0; i < expArray.length; i++) {
                 for (int j = 0; j < expArray[0].length; j++) {
-                    assertEquals("cells [" + i + "][" + j + "] must be equal",
-                            expArray[i][j], resArray[i][j]);
+                    assertEquals(expArray[i][j], resArray[i][j],
+                            "cells [" + i + "][" + j + "] must be equal");
                 }
             }
         });

@@ -49,5 +49,4 @@ public class Matrix implements Serializable {
     @JoinColumn(name = "problem_id", referencedColumnName = "id")
     @ManyToOne(optional = false)
     private Problem parentProblem;
-    
 }

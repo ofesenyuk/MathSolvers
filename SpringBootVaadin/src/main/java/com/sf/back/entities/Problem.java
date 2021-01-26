@@ -55,7 +55,7 @@ public class Problem implements Serializable {
     @Enumerated(EnumType.STRING)
     private Kind kind = POLYNOMIAL;
     @OneToMany(mappedBy = "parentProblem", fetch = FetchType.EAGER)
-    Collection<Problem> children;
+    private Collection<Problem> children;
     @JoinColumn(name = "parent_problem", referencedColumnName = "id")
     @ManyToOne
     private Problem parentProblem;

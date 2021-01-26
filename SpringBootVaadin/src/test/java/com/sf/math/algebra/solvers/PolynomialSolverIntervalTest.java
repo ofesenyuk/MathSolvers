@@ -6,40 +6,28 @@
 package com.sf.math.algebra.solvers;
 
 import com.helger.commons.math.MathHelper;
-import java.math.BigDecimal;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
-import org.junit.After;
-import org.junit.AfterClass;
-import org.junit.Before;
-import org.junit.BeforeClass;
-import org.junit.Test;
-import org.junit.Assert;
-import org.junit.Rule;
-import org.junit.internal.ArrayComparisonFailure;
-import org.junit.rules.ExpectedException;
-import org.junit.runner.RunWith;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.test.context.junit4.SpringRunner;
-
 import com.sf.VaadinMathSolverApplication;
 import com.sf.math.algebra.Polynomial;
-import com.sf.math.algebra.Polynomial;
 import com.sf.math.number.Complex;
-import java.math.RoundingMode;
-import java.util.function.Function;
-import org.junit.Ignore;
+import org.junit.jupiter.api.*;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.data.util.Pair;
+
+import java.math.BigDecimal;
+import java.math.RoundingMode;
+import java.util.Arrays;
+import java.util.List;
+import java.util.function.Function;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
+
+import static org.junit.jupiter.api.Assertions.*;
 
 /**
  *
  * @author OFeseniuk
  */
-@RunWith(SpringRunner.class)
 @SpringBootTest(classes = VaadinMathSolverApplication.class)
 public class PolynomialSolverIntervalTest {
     
@@ -57,19 +45,19 @@ public class PolynomialSolverIntervalTest {
     @Autowired
     DerivativeSolver derivativeSolver;
 
-    @BeforeClass
+    @BeforeAll
     public static void setUpClass() throws Exception {
     }
 
-    @AfterClass
+    @AfterAll
     public static void tearDownClass() throws Exception {
     }
 
-    @Before
+    @BeforeEach
     public void setUp() throws Exception {
     }
 
-    @After
+    @AfterEach
     public void tearDown() throws Exception {
     }
 
@@ -143,15 +131,16 @@ public class PolynomialSolverIntervalTest {
         final BigDecimal precisionB 
             = MINIMAL_BIG_DECIMAL_PRECISION_FOR_CLOSE_ROOTS;
         final BigDecimal r1 = BigDecimal.ONE;
-        findRootsBigDecimalTest(Arrays.asList(r1,
-                precisionB.multiply(new BigDecimal(20)).add(r1)), 
+            BigDecimal r2 = precisionB.multiply(new BigDecimal(20)).add(r1);
+            findRootsBigDecimalTest(Arrays.asList(r1,
+                    r2),
                 precisionB);
         findRootsBigDecimalTest(Arrays.asList(r1,
-                precisionB.multiply(new BigDecimal(20)).add(r1), 
+                r2,
                 new BigDecimal(5)),
                 precisionB);
         findRootsBigDecimalTest(Arrays.asList(r1,
-                precisionB.multiply(new BigDecimal(20)).add(r1), 
+                r2,
                 new BigDecimal(2),
                 new BigDecimal(5)),
                 precisionB);
@@ -325,31 +314,32 @@ public class PolynomialSolverIntervalTest {
     public void testFindRootForLinear() {
         System.out.println("findRootForLinear");
         Double expResult = 1.0;
-        Double coeff1 = 1.0;
+        double coeff1 = 1.0;
         List<Number> coeffs = Arrays.asList(-expResult * coeff1, coeff1);
         Polynomial p = new Polynomial(coeffs);
         Number precision = 10;
         Number result = new PolynomialSolverInterval(null, null)
                 .findRootForLinear(p, precision);
-        Assert.assertEquals("Root of liear equation is not found", 
-                expResult, result);
+        assertEquals(expResult, result, "Root of liear equation is not found");
         
         BigDecimal expResultB = BigDecimal.ONE.scaleByPowerOfTen(-12);
-        BigDecimal coeffB = new BigDecimal(123.321);
+        BigDecimal coeffB = new BigDecimal("123.321");
         List<Number> coeffsB 
                 = Arrays.asList(expResultB.multiply(coeffB).negate(), coeffB);
         Polynomial pB = new Polynomial(coeffsB);
         Number resultB = new PolynomialSolverInterval(null, null)
                 .findRootForLinear(pB, precision);
-        Assert.assertEquals("Root of liear equation is not found", expResultB, resultB);
+        assertEquals(expResultB, resultB, "Root of liear equation is not found");
     }
     
-    @Test(expected = IllegalArgumentException.class)
+    @Test
     public void testFindRootForLinear_forIllegalArgument() {
         System.out.println("testFindRootForLinear_forIllegalArgument");
         List<Number> coeffs = Arrays.asList(1, 2, 3, 4);
         Polynomial p = new Polynomial(coeffs);
-        new PolynomialSolverInterval(null, null).findRootForLinear(p, null);
+        assertThrows(IllegalArgumentException.class,
+                () -> new PolynomialSolverInterval(null, null)
+                        .findRootForLinear(p, null));
 }
 
     /**
@@ -371,19 +361,16 @@ public class PolynomialSolverIntervalTest {
         final Pair<Pair<Number, Number>, Pair<Number, Number>> ab 
             = Pair.of(Pair.of(ax, ay), Pair.of(bx, by));
         Number result = instance.findRootInUpperRectangle(ab, precision, p);
-        Assert.assertEquals("x-part of root is not found", 
-            root1.getX().doubleValue(), result.doubleValue(), precision);
-        Assert.assertEquals("y-part of root is not found", 
-            root1.getY().doubleValue(), 
-            new Complex(result).getY().doubleValue(), 
-            precision);
+        assertEquals(root1.getX().doubleValue(), result.doubleValue(),
+                precision, "x-part of root is not found");
+        assertEquals(root1.getY().doubleValue(), new Complex(result).getY().doubleValue(),
+            precision, "y-part of root is not found");
         
         final double realRoot = ax + (ax + bx) / 3;        
         p = Polynomial.fromRoots(Arrays.asList(root1, root2, realRoot));
         double resultD 
             = (double) instance.findRootInUpperRectangle(ab, precision, p);
-        Assert.assertEquals("real root is not found",
-            realRoot, resultD, precision);
+        assertEquals(realRoot, resultD, precision, "real root is not found");
     }
     @Test
     public void testFindRootInUpperRectangle_BigDecimal() {
@@ -392,7 +379,7 @@ public class PolynomialSolverIntervalTest {
         BigDecimal bx = new BigDecimal(4);
         BigDecimal ay = new BigDecimal(3);
         BigDecimal by = new BigDecimal(7);
-        BigDecimal precision = new BigDecimal(5E-7);
+        BigDecimal precision = new BigDecimal("5E-7");
         Complex root1 = new Complex(ax.add(bx).divide(new BigDecimal(2)), 
                 ay.add(by).divide(new BigDecimal(2)));
         Complex root2 = root1.conjugate();
@@ -404,20 +391,18 @@ public class PolynomialSolverIntervalTest {
         Number result = instance.findRootInUpperRectangle(ab, precision, p);
         Complex delta = root1.minus(new Complex(result));
         Comparable deltaX = (Comparable) delta.getX();
-        Assert.assertTrue("Root's real part is irregular", 
-                deltaX.compareTo(precision) <= 0);
+        assertTrue(deltaX.compareTo(precision) <= 0, "Root's real part is irregular");
         Comparable deltaY = (Comparable) delta.getX();
-        Assert.assertTrue("Root's imaginary part is irregular", 
-                deltaY.compareTo(precision) <= 0);
+        assertTrue(deltaY.compareTo(precision) <= 0, "Root's imaginary part is irregular");
         
         final BigDecimal twoSeventh = new BigDecimal(2)
                 .divide(new BigDecimal(7), 20, RoundingMode.CEILING);        
         BigDecimal realRoot = ax.add(twoSeventh.multiply(ax.add(bx)));
         p = Polynomial.fromRoots(Arrays.asList(root1, root2, realRoot));
         result = instance.findRootInUpperRectangle(ab, precision, p);
-        Assert.assertTrue("Correct real root is not found", 
-            realRoot.subtract(MathHelper.toBigDecimal(result)).abs()
-                    .compareTo(precision) <= 0);
+        assertTrue(realRoot.subtract(MathHelper.toBigDecimal(result)).abs()
+                    .compareTo(precision) <= 0,
+                "Correct real root is not found");
     }
 
     /**
@@ -433,7 +418,7 @@ public class PolynomialSolverIntervalTest {
                 = new PolynomialSolverInterval(null, null);
         Double expResult = 7.0; // 1 + max(6/1, 5/1) > {|-2|, |-3|}
         Double result = instance.getRootUpperLimitCauchy(coefficients);
-        Assert.assertEquals(expResult, result);
+        assertEquals(expResult, result);
     }
 
     private void findRootsBigDecimalTest(List<Number> expResult, 
@@ -459,18 +444,16 @@ public class PolynomialSolverIntervalTest {
             final BigDecimal delta = ((BigDecimal) expectedRes)
                     .subtract((BigDecimal) res)
                     .abs();
-            Assert.assertTrue(
-                String.format("Root is not found with given precision: %f != %f %s != %s", 
-                        expectedRes, res, 
-                        delta.toString(), precision.toString()),
-                delta.compareTo(precision) <= 0);
+            assertTrue(delta.compareTo(precision) <= 0,
+                    () -> String.format("Root is not found with given precision: %f != %f %s != %s",
+                            expectedRes, res, delta.toString(), precision.toString()));
         }
     }
 
     private void findAndCompareComplexRootsWithDoublePrecision(
             List<Number> expResult) {
         Polynomial p = Polynomial.fromRoots(expResult);
-        Number precision = 7E-6;
+        double precision = 7E-6;
         p = new Polynomial(p.getCoefficients()
             .stream()
             .map(Number::doubleValue)
@@ -488,17 +471,16 @@ public class PolynomialSolverIntervalTest {
                 x -> result
                         .stream()
                         .map(Number::doubleValue)
-                        .map(Double::valueOf)
                         .map(r -> (Number) r)
                         .collect(Collectors.toList()),
-                (Double) precision
+                precision
         );
         ComparatorTestUtils.compareArraysWithDoublePrecision(expResultI,
                 x -> result
                         .stream()
                         .map(r -> new Complex(r).getY())
                         .collect(Collectors.toList()),
-                (Double) precision
+                precision
         );
     }
 

@@ -11,7 +11,9 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.function.Function;
 import java.util.stream.Collectors;
-import org.junit.Assert;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 /**
  * Utilities to compare expected results with found solutions 
@@ -27,17 +29,16 @@ public class ComparatorTestUtils {
         final String expStr = Arrays.toString(expResultSorted);
         final String resStr = Arrays.toString(result);
 
-        Assert.assertEquals(String
-                .format("Arrays %s %s should be of the same size ", 
-                        expStr, resStr), 
-            expResultSorted.length, result.length);
+        assertEquals(expResultSorted.length, result.length, () -> String
+                .format("Arrays %s %s should be of the same size ",
+                        expStr, resStr));
 
         for (int i = 0; i < expResultSorted.length; i++) {
-            Assert.assertEquals(String
+            assertEquals((double) expResultSorted[i], (double) result[i],
+                precision * 10,
+                () -> String
                     .format("Root is not found with given precision  %s %s",
-                            expStr, resStr) ,
-                    (double) expResultSorted[i], (double) result[i],
-                    precision * 10);
+                            expStr, resStr));
         }
     }
     
@@ -49,13 +50,13 @@ public class ComparatorTestUtils {
                 = toSortedBigDecimalArray(getResult.apply(expResult));
         List<BigDecimal> expResultSorted = toSortedBigDecimalArray(expResult);
 
-        Assert.assertEquals("Arrays should be of the same size", 
-                expResultSorted.size(), result.size());
+        assertEquals(expResultSorted.size(), result.size(),
+                "Arrays should be of the same size");
 
         for (int i = 0; i < expResultSorted.size(); i++) {
-            Assert.assertTrue("Root is not found with given precision",
-                    expResultSorted.get(i).subtract(result.get(i)).abs()
-                            .compareTo(precision.scaleByPowerOfTen(10)) <= 0);
+            assertTrue(expResultSorted.get(i).subtract(result.get(i)).abs()
+                            .compareTo(precision.scaleByPowerOfTen(10)) <= 0,
+                    "Root is not found with given precision");
         }
     }
 

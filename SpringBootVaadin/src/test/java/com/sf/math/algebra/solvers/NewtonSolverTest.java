@@ -5,18 +5,14 @@
  */
 package com.sf.math.algebra.solvers;
 
-import java.math.BigDecimal;
-import java.util.function.Function;
-import org.junit.After;
-import org.junit.AfterClass;
-import org.junit.Before;
-import org.junit.BeforeClass;
-import org.junit.Test;
-import org.junit.Assert;
-
 import com.sf.math.number.Complex;
-import java.util.Arrays;
+import org.junit.jupiter.api.*;
+
+import java.math.BigDecimal;
 import java.util.Collections;
+import java.util.function.Function;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 /**
  *
@@ -27,19 +23,19 @@ public class NewtonSolverTest {
     public NewtonSolverTest() {
     }
     
-    @BeforeClass
+    @BeforeAll
     public static void setUpClass() {
     }
     
-    @AfterClass
+    @AfterAll
     public static void tearDownClass() {
     }
     
-    @Before
+    @BeforeEach
     public void setUp() {
     }
     
-    @After
+    @AfterEach
     public void tearDown() {
     }
 
@@ -56,23 +52,23 @@ public class NewtonSolverTest {
         double eps = 1.0E-10;
         NewtonSolver instance = new NewtonSolver();
         Double result = instance.find(f, dF, guess, eps);
-        Assert.assertEquals(expResult, result, eps);
+        assertEquals(expResult, result, eps);
         
         guess = expResult * 1000;
         result = instance.find(f, dF, guess, eps);
-        Assert.assertEquals(expResult, result, eps);
+        assertEquals(expResult, result, eps);
         
         guess = expResult * 1000;
         f = x -> Math.sqrt(x - expResult);
         dF = x -> 1.0 / 2.0 / Math.sqrt(x - expResult);
         result = instance.find(f, dF, guess, eps);
-        Assert.assertEquals(Double.NaN, result, eps);
+        assertEquals(Double.NaN, result, eps);
         
         guess = expResult * 10;
         f = x -> Math.atan(x - expResult);
         dF = x -> 1.0 / (1.0 + Math.pow(x - expResult, 2));
         result = instance.find(f, dF, guess, eps);
-        Assert.assertEquals(expResult, result, eps);
+        assertEquals(expResult, result, eps);
     }
 
     /**

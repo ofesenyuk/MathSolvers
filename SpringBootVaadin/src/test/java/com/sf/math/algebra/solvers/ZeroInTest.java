@@ -6,20 +6,17 @@
 package com.sf.math.algebra.solvers;
 
 import com.helger.commons.math.MathHelper;
-import java.math.BigDecimal;
-import java.util.function.Function;
-import org.junit.After;
-import org.junit.AfterClass;
-import org.junit.Before;
-import org.junit.BeforeClass;
-import org.junit.Test;
-import org.junit.Assert;
-
-import java.math.RoundingMode;
-
 import com.sf.math.algebra.Polynomial;
+import org.junit.jupiter.api.*;
+
+import java.math.BigDecimal;
+import java.math.RoundingMode;
+import java.util.function.Function;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 /**
  *
@@ -33,19 +30,19 @@ public class ZeroInTest {
     public ZeroInTest() {
     }
     
-    @BeforeClass
+    @BeforeAll
     public static void setUpClass() {
     }
     
-    @AfterClass
+    @AfterAll
     public static void tearDownClass() {
     }
     
-    @Before
+    @BeforeEach
     public void setUp() {
     }
     
-    @After
+    @AfterEach
     public void tearDown() {
     }
 
@@ -62,15 +59,15 @@ public class ZeroInTest {
         Double eps = IntervalSolver.DOUBLE_MAX_PRECISION;
         ZeroIn instance = new ZeroIn();
         Double result = instance.find(f, ax, bx, eps);
-        Assert.assertEquals(String
-            .format("Solution with given precission %f is not found", 10 * eps), 
-            expResult, result, 10 * eps);
+        assertEquals(expResult, result, 10 * eps,
+                () -> String.format("Solution with given precission %f is not found",
+                        10 * eps));
         
         f = x -> Math.tanh(x);
         result = instance.find(f, ax, bx, eps);
-        Assert.assertEquals(String
-            .format("Solution with given precission %f is not found", 10 * eps), 
-            0, result, 10 * eps);
+        assertEquals(0, result, 10 * eps,
+                () ->String.format("Solution with given precission %f is not found",
+                        10 * eps));
     }
 
     /**
@@ -81,14 +78,14 @@ public class ZeroInTest {
         System.out.println("testFind_RootForDouble");
         Double expResult = Math.PI / 2;
         Function<Double, Double> f = x -> Math.pow(x - expResult, 2)  + 0.1;
-        Double ax = expResult - 0.01;
-        Double bx = expResult + 0.01;
-        Double eps = 1E-9;
+        double ax = expResult - 0.01;
+        double bx = expResult + 0.01;
+        double eps = 1E-9;
         ZeroIn instance = new ZeroIn();
         Double result = instance.find(f, ax, bx, eps);
-        Assert.assertEquals(String
-            .format("Maximum with given precission %f is not found", 2 * eps), 
-            expResult, result, 10 * eps);
+        assertEquals(expResult, result, 10 * eps,
+                () -> String.format("Maximum with given precission %f is not found",
+                        2 * eps));
     }
 
     /**
@@ -97,16 +94,16 @@ public class ZeroInTest {
     @Test
     public void testFind_RootInMinimumForDouble() {
         System.out.println("testFind_RootInMinimumForDouble");
-        Double expResult = Math.PI / 2;
-        Function<Double, Double> f = x -> Math.cos(x);
-        Double ax = 0.0;
-        Double bx = Math.PI;
-        Double eps = IntervalSolver.DOUBLE_MAX_PRECISION;
+        double expResult = Math.PI / 2;
+        Function<Double, Double> f = Math::cos;
+        double ax = 0.0;
+        double bx = Math.PI;
+        double eps = IntervalSolver.DOUBLE_MAX_PRECISION;
         ZeroIn instance = new ZeroIn();
         Double result = instance.find(f, ax, bx, eps);
-        Assert.assertEquals(String
-            .format("Maximum with given precission %f is not found", 2 * eps), 
-            expResult, result, 10 * eps);
+        assertEquals(expResult, result, 10 * eps,
+                () -> String.format("Maximum with given precission %f is not found",
+                        2 * eps) );
     }
 
     /**
@@ -125,10 +122,9 @@ public class ZeroInTest {
         BigDecimal eps = BigDecimal.ONE.divide(BigDecimal.TEN).pow(scale);
         ZeroIn instance = new ZeroIn();
         BigDecimal result = instance.find(f, a, b, eps);
-        Assert.assertEquals(String
-                .format("Solution with given precission %s is not found", 
-                        eps.toString()), 
-            expResult, result);
+        assertEquals(expResult, result,
+                String.format("Solution with given precission %s is not found",
+                        eps.toString()));
         
         double expResult1 = (4 - Math.sqrt(13))/3;        
         f = x -> (BigDecimal)new Polynomial(Stream.of(1, -8, 3)
@@ -139,10 +135,9 @@ public class ZeroInTest {
         b = new BigDecimal(1.3333333333);
         eps = new BigDecimal(3).scaleByPowerOfTen(-10);
         result = instance.find(f, a, b, eps);
-        Assert.assertEquals(String
-                .format("Solution with given precission %s is not found", 
-                        eps.toString()), 
-            expResult1, result.doubleValue(), eps.doubleValue());
+        assertEquals(expResult1, result.doubleValue(), eps.doubleValue(),
+                String.format("Solution with given precission %s is not found",
+                        eps.toString()));
         
         Polynomial p = Polynomial.fromRoots(java.util.Arrays.asList(new BigDecimal(2), 
                 new BigDecimal(-1), new BigDecimal(3)));
@@ -152,10 +147,9 @@ public class ZeroInTest {
         b = new BigDecimal(1.3333333333);
         eps = new BigDecimal(3).scaleByPowerOfTen(-40);
         result = instance.find(f, a, b, eps);
-        Assert.assertTrue(String
-                .format("Solution with given precission %s is not found", 
-                        eps.toString()), 
-            expResult2.subtract(result).abs().multiply(BigDecimal.TEN).compareTo(eps) <= 0);
+        assertTrue(expResult2.subtract(result).abs().multiply(BigDecimal.TEN).compareTo(eps) <= 0,
+                String.format("Solution with given precission %s is not found",
+                        eps.toString()));
     }
 
     /**
@@ -175,10 +169,9 @@ public class ZeroInTest {
         BigDecimal eps = BigDecimal.ONE.scaleByPowerOfTen(-scale);
         ZeroIn instance = new ZeroIn();
         BigDecimal result = instance.find(f, a, b, eps);
-        Assert.assertTrue(String
-                .format("Solution with given precission %s is not found", 
-                        eps.scaleByPowerOfTen(1).toString()), 
-            expResult.subtract(result).abs().compareTo(eps) <= 0);
+        assertTrue(expResult.subtract(result).abs().compareTo(eps) <= 0,
+                String.format("Solution with given precission %s is not found",
+                        eps.scaleByPowerOfTen(1).toString()));
     }
 
     /**
@@ -197,10 +190,9 @@ public class ZeroInTest {
         BigDecimal eps = BigDecimal.ONE.divide(BigDecimal.TEN).pow(scale);
         ZeroIn instance = new ZeroIn();
         BigDecimal result = instance.find(f, a, b, eps);
-        Assert.assertTrue(String
-                .format("Solution with given precission %s is not found",
-                        eps.scaleByPowerOfTen(1).toString()),
-                expResult.subtract(result).abs().compareTo(eps) <= 0);
+        assertTrue(expResult.subtract(result).abs().compareTo(eps) <= 0, String
+                        .format("Solution with given precission %s is not found",
+                                eps.scaleByPowerOfTen(1).toString()));
     }
 
     /**
@@ -219,10 +211,9 @@ public class ZeroInTest {
         BigDecimal eps = BigDecimal.ONE.divide(BigDecimal.TEN).pow(scale);
         ZeroIn instance = new ZeroIn();
         BigDecimal result = instance.find(f, a, b, eps);
-        Assert.assertTrue(String
-                .format("Minimum with given precission %s is not found",
-                        eps.scaleByPowerOfTen(1).toString()),
-                expResult.subtract(result).abs().compareTo(eps) <= 0);
+        assertTrue(expResult.subtract(result).abs().compareTo(eps) <= 0,
+                () -> String.format("Minimum with given precission %s is not found",
+                        eps.scaleByPowerOfTen(1).toString()));
     }
     
 }
