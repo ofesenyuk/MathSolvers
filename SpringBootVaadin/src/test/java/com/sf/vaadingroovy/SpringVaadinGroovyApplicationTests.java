@@ -1,13 +1,13 @@
-package com.sf.VaadinMathSolver;
+package com.sf.vaadingroovy;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 
 @SpringBootTest
-public class VaadinMathSolverApplicationTests {
+class SpringVaadinGroovyApplicationTests {
 
 	@Test
-	public void contextLoads() {
+	void contextLoads() {
 	}
 
 }

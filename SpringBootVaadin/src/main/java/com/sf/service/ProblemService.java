@@ -1,5 +1,8 @@
 package com.sf.service;
 
+import com.github.dozermapper.core.DozerBeanMapper;
+import com.github.dozermapper.core.Mapper;
+import com.github.dozermapper.core.loader.api.BeanMappingBuilder;
 import com.sf.back.entities.Matrix;
 import com.sf.back.entities.Problem;
 import com.sf.repository.ProblemRepository;
@@ -19,8 +22,7 @@ import java.util.Objects;
 import java.util.Optional;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
-import org.dozer.DozerBeanMapper;
-import org.dozer.loader.api.BeanMappingBuilder;
+import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -34,36 +36,18 @@ import org.springframework.transaction.annotation.Transactional;
  * @author sf
  */
 @Service
+@RequiredArgsConstructor
 public class ProblemService {
-    Logger LOG = LoggerFactory.getLogger(ProblemService.class);
-    private final ProblemRepository problemRepository;
-    private final DozerBeanMapper mapper;
-    private final MatrixService matrixService;
-    private final MatrixUtilites matrixUtilites;
     private static final String META_CLASS = "metaClass";
     private static final String DESCRIPTION = "description";
-
-    @Autowired
-    public ProblemService(ProblemRepository problemRepository,
-                          MatrixService matrixService,
-                          MatrixUtilites matrixUtilites
-    ) {
-        this.problemRepository = problemRepository;
-        this.matrixUtilites = matrixUtilites;
-        
-        mapper = new DozerBeanMapper();
-        mapper.addMapping(new BeanMappingBuilder() {
-            @Override
-            protected void configure() {
-                mapping(ProblemDTO.class, Problem.class)
-                    .exclude(DESCRIPTION)
-                    .exclude(META_CLASS);
-            }
-        });
-        this.matrixService = matrixService;
-    }
+    private Logger LOG = LoggerFactory.getLogger(ProblemService.class);
+    private final ProblemRepository problemRepository;
+//    private final DozerBeanMapper mapper;
+    private final MatrixService matrixService;
+    private final MatrixUtilites matrixUtilites;
+    private final Mapper mapper;    
     
-    
+    @Transactional(propagation = Propagation.REQUIRED, readOnly = true)
     public List<ProblemDTO> findAll() {
         final List<Problem> problemsDb = problemRepository.findAll();
         final List<ProblemDTO> dtos = problemsDb.stream()
@@ -73,6 +57,7 @@ public class ProblemService {
         return dtos;
     }
 
+    @Transactional(propagation = Propagation.REQUIRED, readOnly = true)
     public ProblemDTO findById(Long id) {
         final ProblemDTO p = problemRepository.findById(id)
                 .map(this::toProblemDTO)
@@ -89,7 +74,7 @@ public class ProblemService {
      * converts problemDTO to problem with dependent matrixes and saves them
      * @param problemDTO of ProblemDTO type
      */
-    @Transactional
+    @Transactional(propagation = Propagation.REQUIRED)
     public void save(ProblemDTO problemDTO) {
         if (problemDTO == null) {
             throw new IllegalArgumentException("problemDTO is not set "
@@ -129,8 +114,11 @@ public class ProblemService {
      * TODO use Spring converters
      */
     private  ProblemDTO toProblemDTO(Problem problem) {
-        ProblemDTO problemDTO = mapper.map(problem, ProblemDTO.class);
+        ProblemDTO problemDTO = mapper.<ProblemDTO>map(problem, ProblemDTO.class);
         problemDTO.setDescription(problem.getDescription());
+        final Integer precision = problem.getProblemPrecision();
+        problemDTO.setProblemPrecision(precision != null 
+                ? precision.toString() : null);
         
         final Collection<Matrix> matrixes = problem.getMatrixes();
         final List<Matrix> conditionList 

@@ -6,16 +6,18 @@
 
 package com.sf.math.number
 
-import org.junit.Test;
-import static org.junit.Assert.*;
-import org.junit.runner.RunWith;
-import org.springframework.test.context.junit4.SpringRunner;
+import org.junit.jupiter.api.Test;
+import org.springframework.boot.test.context.SpringBootTest;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 /**
  *
  * @author sf
  */
-@RunWith(SpringRunner.class)
+//@RunWith(SpringRunner.class)
+@SpringBootTest
 class ComplexTest {
     
     /**
@@ -26,20 +28,20 @@ class ComplexTest {
         System.out.println("testPlus");
         final Complex expResult = new Complex(x: 2, y: 2);
         Complex result = new Complex(x: 1, y: 2) + 1;
-        assertEquals("x-s are not equal", expResult.x, result.x);
-        assertEquals("y-s are not equal", expResult.y, result.y);
+        assertEquals(expResult.x, result.x, "x-s are not equal");
+        assertEquals(expResult.y, result.y, "y-s are not equal");
         
         result = new Complex(x: 1, y: 2) + 1.0;
-        assertEquals("x-s are not equal", expResult.x, result.x, 0.0);
-        assertEquals("y-s are not equal", expResult.y, result.y, 0.0);
+        assertEquals(expResult.x, result.x, 0.0, "x-s are not equal");
+        assertEquals(expResult.y, result.y, 0.0, "y-s are not equal");
         
         result = new Complex(x: 1, y: 2) + BigDecimal.ONE;
-        assertEquals("x-s are not equal", expResult.x, result.x, 0.0);
-        assertEquals("y-s are not equal", expResult.y, result.y, 0.0);
+        assertEquals(expResult.x, result.x, 0.0, "x-s are not equal");
+        assertEquals(expResult.y, result.y, 0.0, "y-s are not equal");
         
         result = new Complex(x: 1, y: -1) + new Complex(x: 1, y: 3);
-        assertEquals("x-s are not equal", expResult.x, result.x);
-        assertEquals("y-s are not equal", expResult.y, result.y);
+        assertEquals(expResult.x, result.x, "x-s are not equal");
+        assertEquals(expResult.y, result.y, "y-s are not equal");
     }
     
     /**
@@ -50,20 +52,20 @@ class ComplexTest {
         System.out.println("testMinus");
         final Complex expResult = new Complex(x: 1, y: 2);
         Complex result = new Complex(x: 2, y: 2) - 1;
-        assertEquals("x-s are not equal", expResult.x, result.x);
-        assertEquals("y-s are not equal", expResult.y, result.y);
+        assertEquals(expResult.x, result.x, "x-s are not equal");
+        assertEquals(expResult.y, result.y, "y-s are not equal");
         
         result = new Complex(x: 2, y: 2) - 1.0;
-        assertEquals("x-s are not equal", expResult.x, result.x, 0.0);
-        assertEquals("y-s are not equal", expResult.y, result.y, 0.0);
+        assertEquals(expResult.x, result.x, 0.0, "x-s are not equal");
+        assertEquals(expResult.y, result.y, 0.0, "y-s are not equal");
         
         result = new Complex(x: 2, y: 2) - BigDecimal.ONE.divide(BigDecimal.ONE);
-        assertEquals("x-s are not equal", expResult.x, result.x, 0.0);
-        assertEquals("y-s are not equal", expResult.y, result.y, 0.0);
+        assertEquals(expResult.x, result.x, 0.0, "x-s are not equal");
+        assertEquals(expResult.y, result.y, 0.0, "y-s are not equal");
         
         result = new Complex(x: 3, y: -1) - new Complex(x: 2, y: -3);
-        assertEquals("x-s are not equal", expResult.x, result.x);
-        assertEquals("y-s are not equal", expResult.y, result.y);
+        assertEquals(expResult.x, result.x, "x-s are not equal");
+        assertEquals(expResult.y, result.y, "y-s are not equal");
     }
     
     /**
@@ -74,25 +76,25 @@ class ComplexTest {
         System.out.println("testMultiply");
         Complex expResult = new Complex(x: 6, y: -9);
         Complex result = new Complex(x: 2, y: -3) * 3;
-        assertEquals("x-s are not equal", expResult.x, result.x);
-        assertEquals("y-s are not equal", expResult.y, result.y);
+        assertEquals(expResult.x, result.x, "x-s are not equal");
+        assertEquals(expResult.y, result.y, "y-s are not equal");
         
         result = new Complex(x: 2, y: -3) * 3.0;
-        assertEquals("x-s are not equal", expResult.x, result.x, 0.0);
-        assertEquals("y-s are not equal", expResult.y, result.y, 0.0);
+        assertEquals(expResult.x, result.x, 0.0, "x-s are not equal");
+        assertEquals(expResult.y, result.y, 0.0, "y-s are not equal");
         
         result = new Complex(x: 2, y: -3) * new BigDecimal(3.0);
-        assertEquals("x-s are not equal", expResult.x, result.x, 0.0);
-        assertEquals("y-s are not equal", expResult.y, result.y, 0.0);
+        assertEquals(expResult.x, result.x, 0.0, "x-s are not equal");
+        assertEquals(expResult.y, result.y, 0.0, "y-s are not equal");
         
         expResult = new Complex(x: 2, y: -10);
         result = new Complex(x: 3, y: -2) * new Complex(x: 2, y: -2);
-        assertEquals("x-s are not equal", expResult.x, result.x);
-        assertEquals("y-s are not equal", expResult.y, result.y);
+        assertEquals(expResult.x, result.x, "x-s are not equal");
+        assertEquals(expResult.y, result.y, "y-s are not equal");
         
         int expResult1 = 104;
         int result1 = expResult * expResult.conjugate();
-        assertEquals("conjugate does not work properly", expResult1, result1);
+        assertEquals(expResult1, result1, "conjugate does not work properly");
     }
     
     /**
@@ -103,10 +105,11 @@ class ComplexTest {
         System.out.println("testNegative");
         Complex result = -new Complex(x: -2, y: 3);
         final Complex expResult = new Complex(x: 2, y: -3);
-        assertEquals("x-s are not equal", expResult.x, result.x, 0.0);
-        assertEquals("y-s are not equal", expResult.y, result.y, 0.0);
+        assertEquals(expResult.x, result.x, 0.0, "conjugate does not work properly");
+        assertEquals(expResult.y, result.y, 0.0, "y-s are not equal");
     }
-    /**
+    
+   /**
      * Test of divide method, of class Complex.
      */
     @Test
@@ -114,21 +117,21 @@ class ComplexTest {
         System.out.println("testDivide");
         Complex expResult = new Complex(x: 2, y: -3);
         Complex result = new Complex(x: 6, y: -9) / 3;
-        assertEquals("x-s are not equal", expResult.x, result.x, 0.0);
-        assertEquals("y-s are not equal", expResult.y, result.y, 0.0);
+        assertEquals(expResult.x, result.x, 0.0, "x-s are not equal");
+        assertEquals(expResult.y, result.y, 0.0, "y-s are not equal");
         
         result = new Complex(x: 6, y: -9) / 3.0;
-        assertEquals("x-s are not equal", expResult.x, result.x, 0.0);
-        assertEquals("y-s are not equal", expResult.y, result.y, 0.0);
+        assertEquals(expResult.x, result.x, 0.0, "x-s are not equal");
+        assertEquals(expResult.y, result.y, 0.0, "y-s are not equal");
         
         result = new Complex(x: 6, y: -9) / new BigDecimal(3);
-        assertEquals("x-s are not equal", expResult.x, result.x, 0.0);
-        assertEquals("y-s are not equal", expResult.y, result.y, 0.0);
+        assertEquals(expResult.x, result.x, 0.0, "x-s are not equal");
+        assertEquals(expResult.y, result.y, 0.0, "y-s are not equal");
         
         expResult = new Complex(x: 1.25, y: 0.25);
         result = new Complex(x: 3, y: -2) / new Complex(x: 2, y: -2); // (6 + 4)/8, (-4 + 6)/8
-        assertEquals("x-s are not equal", expResult.x, result.x, 0.0);
-        assertEquals("y-s are not equal", expResult.y, result.y, 0.0);
+        assertEquals(expResult.x, result.x, 0.0, "x-s are not equal");
+        assertEquals(expResult.y, result.y, 0.0, "y-s are not equal");
     }
     
     @Test
@@ -139,7 +142,7 @@ class ComplexTest {
             .roundBigDecimalToPrecision(eps);
         Complex expResult = new Complex(new BigDecimal("123.457"), 
             new BigDecimal("98.765"));
-        assertEquals("x-s are not equal", expResult.x, result.x);
-        assertEquals("y-s are not equal", expResult.y, result.y);
+        assertEquals(expResult.x, result.x, "x-s are not equal");
+        assertEquals(expResult.y, result.y, "y-s are not equal");
     }
 }

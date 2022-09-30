@@ -43,6 +43,8 @@ import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
 import static java.sql.Types.*;
+import lombok.extern.slf4j.Slf4j;
+import static org.junit.jupiter.api.Assertions.assertArrayEquals;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNull;
 
@@ -51,6 +53,7 @@ import static org.junit.jupiter.api.Assertions.assertNull;
  * @author sf
  */
 //@RunWith(SpringRunner.class)
+@Slf4j
 @SpringBootTest(
         //  SpringBootTest.WebEnvironment.MOCK,
         classes = VaadinMathSolverApplication.class)
@@ -198,12 +201,21 @@ public class ProblemServiceTest {
                 .setConditionArray(new String[][]{{"1.0", "2.0", "3.0", "4.0"}});
 
         problemService.save(problemDTO);
+        problemRepository.flush();
 
         Mockito.verify(problemService)
                 .save(problemCaptor.capture());
         final long savedId = problemCaptor.getValue().getId();
         problemDTO.setId(savedId);
         final ProblemDTO problemFound = problemService.findById(savedId);
+        log.info("problemDTO [{}]", problemDTO);
+        log.info("problemFound [{}]", problemFound);
+        assertArrayEquals(problemDTO.getConditionArray(), problemFound.getConditionArray());
+        assertEquals(problemDTO.getDescription(), problemFound.getDescription());
+        assertEquals(problemDTO.getId(), problemFound.getId());
+        assertEquals(problemDTO.getKind(), problemFound.getKind());
+        assertEquals(problemDTO.getProblemPrecision(), problemFound.getProblemPrecision());
+        assertEquals(problemDTO.getSolution(), problemFound.getSolution());
         assertEquals(problemDTO, problemFound, "Problem is not saved.");
     }
 

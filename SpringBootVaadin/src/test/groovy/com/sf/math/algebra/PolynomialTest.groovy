@@ -7,18 +7,21 @@
 package com.sf.math.algebra
 
 import java.math.RoundingMode;
-import org.junit.Test;
-import org.junit.Assert;
-import org.junit.runner.RunWith;
-import org.springframework.test.context.junit4.SpringRunner;
+import org.junit.jupiter.api.Test;
+import org.springframework.boot.test.context.SpringBootTest;
 
 import com.sf.math.number.Complex;
 import com.sf.math.algebra.Polynomial;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+
 /**
  *
  * @author sf
  */
-@RunWith(SpringRunner.class)
+//@RunWith(SpringRunner.class)
+@SpringBootTest
 class PolynomialTest {
     
     private static final INEQUAL_COEFFICIENTS = "coefficients are not equal";
@@ -31,9 +34,9 @@ class PolynomialTest {
     public void testConstructor() {
         println "testConstructor";
         Polynomial p1 = new Polynomial(null);
-        Assert.assertEquals([1], p1.coefficients);
+        assert [1] == p1.coefficients;
         p1 = new Polynomial(Collections.emptyList());
-        Assert.assertEquals([1], p1.coefficients);
+        assert [1] == p1.coefficients;
     }
     
     /**
@@ -46,19 +49,17 @@ class PolynomialTest {
         Polynomial p1 = new Polynomial(coefficients);
         final Polynomial expResult = new Polynomial([2, 2, 3]);
         Polynomial result = p1 + 1;
-        Assert.assertEquals(INEQUAL_COEFFICIENTS, expResult.coefficients, 
-            result.coefficients);
-        Assert.assertFalse("coefficients' pointers are equal", expResult == result);
+        assert expResult.coefficients == result.coefficients : INEQUAL_COEFFICIENTS;
+        assert expResult != result : "coefficients' pointers are equal";
         
         
         result = new Polynomial([-5, 1, -7, 6]) + new Polynomial([7, 1, 10, -6]);
-        Assert.assertEquals(INEQUAL_COEFFICIENTS, expResult.coefficients, 
-            result.coefficients);
+        assert expResult.coefficients == result.coefficients : INEQUAL_COEFFICIENTS;
         
         result = new Polynomial([new BigDecimal(-5), 1, -7, new BigDecimal(6)]) + new Polynomial([7, 1, 10, -6]);
         List<BigDecimal> expCoeffs = expResult.coefficients.collect{c -> new BigDecimal(c)};
         List<BigDecimal> resCoeffs = result.coefficients.collect{c -> new BigDecimal(c)};
-        Assert.assertEquals(INEQUAL_COEFFICIENTS, expCoeffs, resCoeffs);
+        assert expCoeffs == resCoeffs : INEQUAL_COEFFICIENTS;
     }
     
     /**
@@ -69,9 +70,8 @@ class PolynomialTest {
         System.out.println("testPlusNull");
         List<Integer> coefficients = [1, 2, 3];
         Polynomial p1 = new Polynomial(coefficients);        
-        Assert.assertEquals(INEQUAL_COEFFICIENTS, 
-            [coefficients[0] + 1] + coefficients[1..<coefficients.size()], 
-            (p1 + new Polynomial(null)).coefficients); 
+        assert [coefficients[0] + 1] + coefficients[1..<coefficients.size()]
+            == (p1 + new Polynomial(null)).coefficients : INEQUAL_COEFFICIENTS; 
     }
     
     /**
@@ -84,18 +84,17 @@ class PolynomialTest {
         Polynomial p1 = new Polynomial(coefficients);
         final Polynomial expResult = new Polynomial([4, 2, 3]);
         Polynomial result = p1 - 1;
-        Assert.assertEquals(INEQUAL_COEFFICIENTS, expResult.coefficients, 
-            result.coefficients);
-        Assert.assertFalse("coefficients' pointers are equal", expResult == result);
+        assert expResult.coefficients == result.coefficients : INEQUAL_COEFFICIENTS
+        assert expResult != result : "coefficients' pointers are equal"
         
         
         result = new Polynomial([-2, 1, -7, 6]) - new Polynomial([-6, -1, -10, 6]);
-        Assert.assertEquals(INEQUAL_COEFFICIENTS, expResult.coefficients, result.coefficients);
+        assert expResult.coefficients == result.coefficients : INEQUAL_COEFFICIENTS
         
         result = new Polynomial([new BigDecimal(-2), 1, -7, new BigDecimal(6)]) - new Polynomial([-6, -1, -10, 6]);
         List<BigDecimal> expCoeffs = expResult.coefficients.collect{c -> new BigDecimal(c)};
         List<BigDecimal> resCoeffs = result.coefficients.collect{c -> new BigDecimal(c)};
-        Assert.assertEquals(INEQUAL_COEFFICIENTS, expCoeffs, resCoeffs);
+        assert expCoeffs == resCoeffs : INEQUAL_COEFFICIENTS
     }
     
     /**
@@ -106,9 +105,9 @@ class PolynomialTest {
         System.out.println("testMinusNull");
         List<Integer> coefficients = [5, 2, 3];
         Polynomial p1 = new Polynomial(coefficients);
-        Assert.assertEquals(INEQUAL_COEFFICIENTS, 
-            [1 - coefficients[0]] + (coefficients[1..<coefficients.size()]).collect{-it},
-            (new Polynomial([]) - p1).coefficients);
+        assertEquals([1 - coefficients[0]] + (coefficients[1..<coefficients.size()]).collect{-it},
+            (new Polynomial([]) - p1).coefficients,
+            INEQUAL_COEFFICIENTS);
     }
     
     /**
@@ -120,16 +119,16 @@ class PolynomialTest {
         Polynomial p1 = new Polynomial([1, 2]);
         Polynomial expResult = new Polynomial([3, 6]);
         Polynomial result = p1 * 3;
-        Assert.assertEquals(INEQUAL_COEFFICIENTS, expResult.coefficients, result.coefficients);        
+        assertEquals(expResult.coefficients, result.coefficients, INEQUAL_COEFFICIENTS);        
         
         final Polynomial p2 = new Polynomial([3, 4]);
         expResult = new Polynomial([3, 10, 8]);
         Polynomial result1 = p1 * p2;
-        Assert.assertEquals(INEQUAL_COEFFICIENTS, expResult.coefficients, result1.coefficients);
+        assertEquals(expResult.coefficients, result1.coefficients, INEQUAL_COEFFICIENTS);
         
         result = new Polynomial([-2, 1]) * new Polynomial([4, 2, 1]);
         expResult = new Polynomial([-8, 0, 0, 1]);
-        Assert.assertEquals(INEQUAL_COEFFICIENTS, expResult.coefficients, result.coefficients);        
+        assertEquals(expResult.coefficients, result.coefficients, INEQUAL_COEFFICIENTS);        
         
         // to debug use simplier numbers
         List<Number> roots = [2.2, new Complex(3.1, 2.5), new Complex(3.1, -2.5), 0]; 
@@ -139,10 +138,10 @@ class PolynomialTest {
         roots.each(){ 
             Number val1 = p1.value(it);
             if (val1 instanceof Complex) {
-                Assert.assertEquals(ZERO_AT_ROOT, 0, val1.x, 0); 
-                Assert.assertEquals(ZERO_AT_ROOT, 0, val1.y, 0); 
+                assertEquals(0, val1.x, 0, ZERO_AT_ROOT); 
+                assertEquals(0, val1.y, 0, ZERO_AT_ROOT); 
             } else {
-                Assert.assertEquals(ZERO_AT_ROOT, 0, val1, 0); 
+                assertEquals(0, val1, 0, ZERO_AT_ROOT); 
             }
         }
         } catch(NumberFormatException e) {
@@ -160,8 +159,8 @@ class PolynomialTest {
         System.out.println("testMultiplyNull");
         Polynomial p1 = new Polynomial([1, 2]);
         
-        Assert.assertEquals(INEQUAL_COEFFICIENTS, p1.coefficients, 
-            (new Polynomial([]) * p1).coefficients);
+        assertEquals(p1.coefficients, 
+            (new Polynomial([]) * p1).coefficients, INEQUAL_COEFFICIENTS);
     }
     
     /**
@@ -174,14 +173,14 @@ class PolynomialTest {
         Polynomial expResult = new Polynomial([2, -4]);
         Polynomial result = p1 / 3;
         def range = 0..<expResult.coefficients.size();
-        range.each{Assert.assertEquals(INEQUAL_COEFFICIENTS, expResult.coefficients[it], result.coefficients[it], 0)};        
+        range.each{assertEquals(expResult.coefficients[it], result.coefficients[it], 0, INEQUAL_COEFFICIENTS)};        
         
         final int remainder = 0;
         p1 = Polynomial.fromRoots([1, 2, 3]) + remainder; // x*x*x - 6*x*x +11*x - 6 + 5
         final Polynomial p2 = Polynomial.fromRoots([2, 3]); // x*x - 5*x + 6
         expResult = Polynomial.fromRoots([1]);
         result = p1 / p2;
-        range.each{Assert.assertEquals(INEQUAL_COEFFICIENTS, expResult.coefficients[it], result.coefficients[it], 0)};
+        range.each{assertEquals(expResult.coefficients[it], result.coefficients[it], 0, INEQUAL_COEFFICIENTS)};
         
         
     }
@@ -194,8 +193,9 @@ class PolynomialTest {
         System.out.println("testDivNull");
         Polynomial p1 = new Polynomial([1, 2]);
         
-        Assert.assertEquals(INEQUAL_COEFFICIENTS, p1.coefficients, 
-            p1.div(new Polynomial([])).coefficients.collect{it.intValue()});
+        assertEquals(p1.coefficients, 
+            p1.div(new Polynomial([])).coefficients.collect{it.intValue()},
+            INEQUAL_COEFFICIENTS);
     }
     
     /**
@@ -204,10 +204,10 @@ class PolynomialTest {
     @Test
     public void testFromRoots() {
         System.out.println("testFromRoots");
-        Assert.assertEquals(new Polynomial(null).coefficients, Polynomial.fromRoots(null).coefficients);
-        Assert.assertEquals(new Polynomial(null).coefficients, Polynomial.fromRoots([]).coefficients);
+        assertEquals(new Polynomial(null).coefficients, Polynomial.fromRoots(null).coefficients);
+        assertEquals(new Polynomial(null).coefficients, Polynomial.fromRoots([]).coefficients);
         int root = 3;
-        Assert.assertEquals(ZERO_AT_ROOT, 0, Polynomial.fromRoots([root]).value(root), 0);
+        assertEquals(0, Polynomial.fromRoots([root]).value(root), 0, ZERO_AT_ROOT);
     }
     
     /**
@@ -218,7 +218,7 @@ class PolynomialTest {
         System.out.println("testNegative");
         List<Number> coeffs = [1, 2, 3, 4];
         Polynomial p = new Polynomial(coeffs);
-        Assert.assertEquals("Polynomial is not negated", -coeffs, (-p).coefficients);
+        assertEquals(-coeffs, (-p).coefficients, "Polynomial is not negated");
     }
     
     /**
@@ -230,7 +230,7 @@ class PolynomialTest {
         List<Number> coeffs = [3, 2, 3, 4];
         List<Number> dCoeffs = [2, 6, 12];
         Polynomial p = new Polynomial(coeffs);
-        Assert.assertEquals("Polynomial derivative is has errors", dCoeffs, p.derivative().coefficients);
+        assertEquals(dCoeffs, p.derivative().coefficients, "Polynomial derivative is has errors");
     }
     
     /**
@@ -242,15 +242,15 @@ class PolynomialTest {
         List<Number> roots = [5.1234567890123, 100000000.123456765432, -123432123.54323454];
         Polynomial p = Polynomial.fromRoots(roots);
         float precision = 1.0E-10f
-        Assert.assertTrue("Roots are not recognized", roots.every{p.isRoot(it, precision)});
+        assertTrue(roots.every{p.isRoot(it, precision)}, "Roots are not recognized");
         List<Number> cRoots = [new BigDecimal(Math.PI), new Complex(BigDecimal.TEN, BigDecimal.ONE), new Complex(BigDecimal.TEN, -BigDecimal.ONE)];
         Polynomial cP = Polynomial.fromRoots(cRoots);
         BigDecimal cPrecision = BigDecimal.ONE.scaleByPowerOfTen(-24);
-        Assert.assertTrue("Complex roots are not recognized", cRoots.every{cP.isRoot(it, cPrecision)});
-        Assert.assertTrue("Roots are not recognized", roots.every{p.isRoot(it, cPrecision)});
+        assertTrue(cRoots.every{cP.isRoot(it, cPrecision)}, "Complex roots are not recognized");
+        assertTrue(roots.every{p.isRoot(it, cPrecision)}, "Roots are not recognized");
         List<Number> cRoots2 =[new Complex(1.1, 1.4), new Complex(1.1, -1.4)]
         Polynomial cP2 = Polynomial.fromRoots(cRoots2);
-        Assert.assertTrue("Complex roots are not recognized", cRoots2.every{cP2.isRoot(it, precision)});
+        assertTrue(cRoots2.every{cP2.isRoot(it, precision)}, "Complex roots are not recognized");
     }
     
     /**
@@ -262,23 +262,22 @@ class PolynomialTest {
         List<Number> coeffs = [Double.valueOf(5.1234567890123), 1, null, Double.valueOf(0.0), -123432123.54323454f];
         Polynomial p = new Polynomial(coeffs);
         Polynomial complexP = p.unifyCoefficientsTypes();
-        Assert.assertTrue("All coefficients must be of Double class", complexP.coefficients.every{!it || it instanceof Double});
+        assertTrue(complexP.coefficients.every{!it || it instanceof Double}, "All coefficients must be of Double class");
         
         coeffs = [BigDecimal.ONE, 1, null, 0, BigDecimal.TEN, 1]
         p = new Polynomial(coeffs);
         complexP = p.unifyCoefficientsTypes();
-        Assert.assertTrue("All coefficients must be of BigDecimal class", complexP.coefficients.every{!it || it instanceof BigDecimal});
-        
-        
+        assertTrue(complexP.coefficients.every{!it || it instanceof BigDecimal}, "All coefficients must be of BigDecimal class");
+                
         coeffs = [new Complex(1.1, 12), new Complex(1), null, new Complex(BigDecimal.ONE, BigDecimal.TEN), BigDecimal.TEN, 1]
         p = new Polynomial(coeffs);
         complexP = p.unifyCoefficientsTypes();
-        Assert.assertTrue("All coefficients must be of Complex class", complexP.coefficients.every{!it || it instanceof Complex});
+        assertTrue(complexP.coefficients.every{!it || it instanceof Complex}, "All coefficients must be of Complex class");
         
         coeffs = [new Complex(1.1, 12), new Complex(1), 2, null, new Complex(BigDecimal.ZERO, BigDecimal.ZERO), BigDecimal.ZERO, 0]
         p = new Polynomial(coeffs);
         complexP = p.unifyCoefficientsTypes();
-        Assert.assertTrue("All coefficients must be of Complex class", complexP.coefficients.every{!it || it instanceof Complex});
+        assertTrue(complexP.coefficients.every{!it || it instanceof Complex}, "All coefficients must be of Complex class");
      
     }
     
@@ -291,7 +290,7 @@ class PolynomialTest {
         List<Number> coeffs = [new Complex(1.1, 12), new Complex(1), null, new Complex(BigDecimal.ONE, BigDecimal.TEN), BigDecimal.TEN, 1]
         Polynomial p = new Polynomial(coeffs);
         Polynomial complexP = p.toComplex();
-        Assert.assertTrue("All coefficients must be of Complex class", complexP.coefficients.every{it == null || it instanceof Complex});
+        assertTrue(complexP.coefficients.every{it == null || it instanceof Complex}, "All coefficients must be of Complex class");
      
     }
     
@@ -306,13 +305,13 @@ class PolynomialTest {
         Polynomial p = new Polynomial(coeffs);
         Number multipliedPrecision = p.getMultipliedPrecision(precision);
         Number expectedValue = precision / (1 + 1 + 2 * 1 + 3 * 2);
-        Assert.assertEquals("MultipliedPrecision is not calculated normally", 
-            expectedValue, multipliedPrecision, 0.1);
+        assertEquals(expectedValue, multipliedPrecision, 0.1, \
+            "MultipliedPrecision is not calculated normally");
      
         precision = new BigDecimal(precision);
         multipliedPrecision = p.getMultipliedPrecision(precision);
-        Assert.assertEquals("MultipliedPrecision is not calculated normally", 
-            expectedValue, multipliedPrecision.doubleValue(), 0.1);
+        assertEquals(expectedValue, multipliedPrecision.doubleValue(), 0.1, \
+            "MultipliedPrecision is not calculated normally");
     }
     
     /**
@@ -324,8 +323,8 @@ class PolynomialTest {
         List<Number> roots = [new Complex(1, 1), new Complex(1, -1)];
         Polynomial p = Polynomial.fromRoots(roots);
         List<Number> coeffs = p.coefficients;
-        Assert.assertTrue("Coefficients are still complex", 
-            coeffs.every{!(it instanceof Complex)});
+        assertTrue(coeffs.every{!(it instanceof Complex)}, \
+            "Coefficients are still complex");
     }
 }
 

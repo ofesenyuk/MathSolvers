@@ -8,19 +8,21 @@ package com.sf.math.algebra.solvers
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
-import org.junit.Test;
-import org.junit.Assert;
-import org.junit.runner.RunWith
-import org.springframework.test.context.junit4.SpringRunner;
+import org.junit.jupiter.api.Test;
+import org.springframework.boot.test.context.SpringBootTest;
 
 import com.sf.math.algebra.solvers.ZeroinG;
 import com.sf.math.algebra.solvers.IntervalSolver;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 /**
  *
  * @author OFeseniuk
  */
-@RunWith(SpringRunner.class)
+//@RunWith(SpringRunner.class)
+@SpringBootTest
 class ZeroinGTest {
     
     private static final int MAX_PRECISION_FOUND = 200;
@@ -29,7 +31,7 @@ class ZeroinGTest {
     /**
      * Test of find method, of class ZeroIn.
      */
-//    @Test
+    @Test
     public void testFind_RootForDoubleG() {
         System.out.println("testFind_RootForDouble_G");        
         Double expResult = BigDecimal.ONE.divide(new BigDecimal("7"), 100, RoundingMode.CEILING).doubleValue();
@@ -41,31 +43,30 @@ class ZeroinGTest {
         Double result = instance.find(f, ax, bx, eps);
         Double delta = result - expResult;
         println "expResult = $expResult result = $result delta = $delta";
-        Assert.assertEquals(String
-            .format("Solution with given precision %f is not found", 10 * eps), 
-            expResult, result, 10 * eps);
+        assertEquals(expResult, result, 10 * eps,
+            String.format("Solution with given precision %f is not found", 10 * eps),);
     }
     
     /**
      * Test of find method, of class ZeroIn.
      */
-    @Test
-    public void testFind_RootForBigDecimalG() {
-        System.out.println("testFind_RootForBigDecimalG");
-        final int scale = TEST_PRECISION;
-        BigDecimal expResult = IntervalSolver.THREE.divide(new BigDecimal(17), 
-            scale, RoundingMode.CEILING);        
-        def f = {x -> (x.pow(2)).subtract(expResult.pow(2))};
-        BigDecimal a = BigDecimal.ZERO;
-        BigDecimal b = expResult.add(BigDecimal.TEN);
-        BigDecimal eps = BigDecimal.ONE.divide(BigDecimal.TEN).pow(scale);
-        ZeroinG instance = new ZeroinG();
-        BigDecimal result = instance.find(f, a, b, eps);
-        def delta = (result - expResult).toString().split("E")[1];
-        Assert.assertTrue(String
-            .format("Solution with given precision %s is not found", 
-                eps.toString()), 
-            (expResult - result).abs().compareTo(eps) < 0);
-    }
+//    @Test
+//    public void testFind_RootForBigDecimalG() {
+//        System.out.println("testFind_RootForBigDecimalG");
+//        final int scale = TEST_PRECISION;
+//        BigDecimal expResult = IntervalSolver.THREE.divide(new BigDecimal(17), 
+//            scale, RoundingMode.CEILING);        
+//        def f = {x -> (x.pow(2)).subtract(expResult.pow(2))};
+//        BigDecimal a = BigDecimal.ZERO;
+//        BigDecimal b = expResult.add(BigDecimal.TEN);
+//        BigDecimal eps = BigDecimal.ONE.divide(BigDecimal.TEN).pow(scale);
+//        ZeroinG instance = new ZeroinG();
+//        BigDecimal result = instance.find(f, a, b, eps);
+//        def delta = (result - expResult).toString().split("E")[1];
+//        Assert.assertTrue(String
+//            .format("Solution with given precision %s is not found", 
+//                eps.toString()), 
+//            (expResult - result).abs().compareTo(eps) < 0);
+//    }
 }
 
