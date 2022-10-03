@@ -10,7 +10,6 @@ import com.vaadin.flow.component.icon.VaadinIcon;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.router.Route;
-import com.vaadin.flow.server.PWA;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
@@ -23,7 +22,6 @@ import org.springframework.beans.factory.annotation.Autowired;
  * @author sf
  */
 @Route
-@PWA(name = "Project Base for Vaadin Flow", shortName = "Project Base")
 public class MainView extends VerticalLayout {
 
     private static final String CONDITION_COL = "Condition";

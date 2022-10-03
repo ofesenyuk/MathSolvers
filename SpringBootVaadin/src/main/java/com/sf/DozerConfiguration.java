@@ -18,13 +18,6 @@ import org.springframework.context.annotation.Configuration;
 @Configuration
 public class DozerConfiguration {
     
-//    @Bean
-//    public DozerBeanMapperFactoryBean dozerBeanMapperFactoryBean() {
-//        final DozerBeanMapperFactoryBean dozerBeanMapperFactoryBean 
-//                = new DozerBeanMapperFactoryBean();
-//        dozerBeanMapperFactoryBean.setCustomFieldMapper(customFieldMapper);
-//    }
-    
     @Bean
     public BeanMappingBuilder beanMappingBuilder() {
         return new BeanMappingBuilder() {
