@@ -25,6 +25,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.util.CollectionUtils;
 
 /**
  *
@@ -182,7 +183,10 @@ public class ProblemEditor extends VerticalLayout implements KeyNotifier {
                 final TextField cell = new TextField();
                 final String colNo = String.valueOf(j);
                 cell.setLabel(rowNo + colNo);
-                cell.setValue(row[j]);
+                final String rJ = row[j];
+                if (rJ != null) {
+                    cell.setValue(rJ);
+                }
                 matrixInputCols[j].add(cell);
             }
         }
@@ -255,13 +259,14 @@ public class ProblemEditor extends VerticalLayout implements KeyNotifier {
 
     private void readProblemFromInput() {
         problem.setDescription(description.getValue());
+        problem.setProblemPrecision(problemPrecision.getValue());
     }
 
     private void getSolution(Details.OpenedChangeEvent e) {
         if (e.isOpened()) {
             Map<String, String[][]> solution = problem.getSolution();            
-            if (solution == null || solution.isEmpty()) {
-                problem.setSolution(service.getSolution(problem.getId()));
+            if (CollectionUtils.isEmpty(solution)) {
+                problem.setSolution(service.findSolution(problem.getId()));
                 solution = problem.getSolution();
             }
             buildSolutionLayout(solution);
@@ -270,7 +275,7 @@ public class ProblemEditor extends VerticalLayout implements KeyNotifier {
 
     private void buildSolutionLayout(Map<String, String[][]> solution) {
         solutionLayout.removeAll();
-        if (solution == null || solution.isEmpty()) {
+        if (CollectionUtils.isEmpty(solution)) {
             return;
         }
         if (solution.size() == 1) {

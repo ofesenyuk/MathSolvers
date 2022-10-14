@@ -65,9 +65,9 @@ public class PolynomialSolverInterval implements PolynomialSolver {
             Polynomial p, Number precision
     ) {
         List<Number> coefficients = p.getCoefficients();
-        int initialSize = coefficients.size();
         LOG.debug("findRoots for coefficients {} with precision {}", 
             coefficients, precision);
+        int initialSize = coefficients.size();
         
         if (initialSize == 2) {
             return Collections.singletonList(findRootForLinear(p,  precision));

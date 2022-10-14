@@ -34,7 +34,7 @@ public class VaadinMathSolverApplication {
             LOG.info("test data preparation");
             final Problem p = new Problem();
             p.setDescription("Find all roots of given polynomial".getBytes());
-            p.setIsSolved(false);
+            p.setIsSolved(true);
             p.setKind(Kind.POLYNOMIAL);
             p.setMatrixDimension(1);
             p.setProblemPrecision(6);

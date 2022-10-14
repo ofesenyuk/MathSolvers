@@ -218,6 +218,13 @@ class Complex extends Number implements Comparable {
      */
     Complex roundBigDecimalToPrecision(BigDecimal precision) {
         int scale = precision.scale();
+        this.roundBigDecimalToScale(scale);
+    }
+    
+    /**
+     * converts x, y-parts to BigDecimal and rounds to scale
+     */
+    Complex roundBigDecimalToScale(Integer scale) {
         Complex cB = this.toComplexBigDecimal();
         new Complex(cB.x.setScale(scale, BigDecimal.ROUND_HALF_UP), cB.y.setScale(scale, BigDecimal.ROUND_HALF_UP));
     }

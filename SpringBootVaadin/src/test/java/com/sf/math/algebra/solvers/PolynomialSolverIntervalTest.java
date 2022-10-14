@@ -65,6 +65,37 @@ public class PolynomialSolverIntervalTest {
      * Test of findRoots method, of class PolynomialSolverInterval.
      */
     @Test
+    public void testFindRoots_real1() {
+        System.out.println("testFindRoots_real1"); 
+        final double precision = 1E-10;
+        Polynomial p = new Polynomial(Arrays.asList(6, -5, 1));
+        final List<Number> roots = solver.findRoots(p, precision);
+        assertEquals(2.0, roots.get(0).doubleValue(), precision * 10);
+        assertEquals(3.0, roots.get(1).doubleValue(), precision * 10);
+    }
+    
+
+    /**
+     * Test of findRoots method of class PolynomialSolverInterval.for complex
+     */
+    @Test
+    public void testFindRoots_complex() {
+        System.out.println("testFindRoots_complex"); 
+        final double precision = 1E-10;
+        Polynomial p = new Polynomial(Arrays.asList(1, 1, 1));
+        final List<Number> roots = solver.findRoots(p, precision);
+        assertEquals(-0.5, roots.get(0).doubleValue(), precision * 10);
+        assertEquals(-0.5, roots.get(1).doubleValue(), precision * 10);
+        assertEquals(Math.sqrt(3) / 2, 
+                new Complex(roots.get(0)).getY().doubleValue(), precision * 10);
+        assertEquals(-Math.sqrt(3) / 2, 
+                new Complex(roots.get(1)).getY().doubleValue(), precision * 10);
+    }
+    
+    /**
+     * Test of findRoots method, of class PolynomialSolverInterval.
+     */
+    @Test
     public void testFindRoots_real() {
         System.out.println("testFindRoots_real"); 
         final double precision = 1E-10;

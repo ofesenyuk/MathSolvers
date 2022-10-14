@@ -9,6 +9,7 @@ import com.sf.VaadinMathSolverApplication;
 import com.sf.back.entities.Kind;
 import com.sf.back.entities.Matrix;
 import com.sf.back.entities.Problem;
+import com.sf.math.number.Complex;
 import com.sf.repository.ProblemRepository;
 import com.sf.shared.dto.ProblemDTO;
 import org.junit.jupiter.api.*;
@@ -32,6 +33,8 @@ import javax.persistence.Table;
 import javax.sql.DataSource;
 import javax.transaction.Transactional;
 import java.io.UnsupportedEncodingException;
+import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.sql.Blob;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -43,10 +46,12 @@ import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
 import static java.sql.Types.*;
+import javax.validation.constraints.AssertTrue;
 import lombok.extern.slf4j.Slf4j;
 import static org.junit.jupiter.api.Assertions.assertArrayEquals;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 /**
  *
@@ -236,11 +241,11 @@ public class ProblemServiceTest {
      */
     @Test
     public void testGetSavedSolution() {
-        System.out.println("getSolution");
+        System.out.println("testGetSavedSolution");
         Long id = createProblemWithSolution();
         ProblemDTO problemDTO = problemService.findById(id);
         Map<String, String[][]> expResult = problemDTO.getSolution();
-        Map<String, String[][]> result = problemService.getSolution(id);
+        Map<String, String[][]> result = problemService.findSolution(id);
         assertEquals(expResult.keySet(), result.keySet());
         expResult.forEach((key, expArray) -> {
             String[][] resArray = result.get(key);
@@ -312,6 +317,100 @@ public class ProblemServiceTest {
                     : null);
             assertEquals(expM.getFloatValue(), resM.getFloatValue());
         });
+    }
+
+    /**
+     * Test of getSolution method, of class ProblemService.
+     * checks if
+     */
+    @Test
+    public void testGetSolutionOfAbsentProblem() {
+        System.out.println("testGetSolutionOfAbsentProblem");
+        Long problemId = Long.MIN_VALUE;
+        Map<String, String[][]> expResult = ProblemService.SOLUTION_NULL_OBJECT;
+        Map<String, String[][]> result = problemService.findSolution(problemId);
+        assertArrayEquals(expResult.values().toArray(), result.values().toArray());
+    }
+
+    /**
+     * Test of getSolution method, of class ProblemService.
+     * checks if
+     */
+    @Test
+    public void testGetRealSolution() {
+        System.out.println("testGetRealSolution");
+        final Problem p = new Problem();
+        p.setDescription("asf");
+        p.setIsSolved(false);
+        p.setProblemPrecision(10);
+        Double[] coefficients = new Double[]{6.0, -5.0, 1.0};
+        final int dimension = coefficients.length;
+        p.setMatrixDimension(dimension);
+        final List<Matrix> matrixes = IntStream.range(0, dimension)
+                .mapToObj(j -> {
+                    final Matrix m = new Matrix();
+                    m.setI(0);
+                    m.setJ(j);
+                    m.setFloatValue(coefficients[j]);
+                    m.setIsCondition(true);
+                    m.setParentProblem(p);
+                    return m;
+                })
+                .collect(Collectors.toList());
+        p.setMatrixes(matrixes);
+        problemService.save(p);
+        Long problemId = p.getId();
+        String[][] expResult = new String[][]{new String[]{"2", "3"}};
+        Map<String, String[][]> result = problemService.findSolution(problemId);
+        assertEquals("", result.keySet().stream().findAny().get());
+        final String[][] foundRoots = result.values().stream().findAny().get();
+        for (int i = 0; i < expResult[0].length; i++) {
+            assertTrue(foundRoots[0][i].startsWith(expResult[0][i]));
+        }
+    }
+
+    /**
+     * Test of getSolution method, of class ProblemService.
+     * checks if
+     */
+    @Test
+    public void testGetComplexSolution() {
+        System.out.println("testGetRealSolution");
+        final Problem p = new Problem();
+        p.setDescription("asf");
+        p.setIsSolved(false);
+        final int precision = 10;
+        p.setProblemPrecision(precision);
+        Double[] coefficients = new Double[]{1.0, 1.0, 1.0};
+        final int dimension = coefficients.length;
+        p.setMatrixDimension(dimension);
+        final List<Matrix> matrixes = IntStream.range(0, dimension)
+                .mapToObj(j -> {
+                    final Matrix m = new Matrix();
+                    m.setI(0);
+                    m.setJ(j);
+                    m.setFloatValue(coefficients[j]);
+                    m.setIsCondition(true);
+                    m.setParentProblem(p);
+                    return m;
+                })
+                .collect(Collectors.toList());
+        p.setMatrixes(matrixes);
+        problemService.save(p);
+        Long problemId = p.getId();
+        BigDecimal mHalf = BigDecimal.valueOf(-1./2.).setScale(precision);
+        BigDecimal halfSqrt3 = BigDecimal.valueOf(Math.sqrt(3.) / 2)
+                .setScale(precision, RoundingMode.HALF_UP);
+        String[][] expResult = new String[][]{new String[]{
+            new Complex(mHalf, halfSqrt3).toString(), 
+            new Complex(mHalf, halfSqrt3.negate()).toString()
+        }};
+        Map<String, String[][]> result = problemService.findSolution(problemId);
+        assertEquals("", result.keySet().stream().findAny().get());
+        final String[][] foundRoots = result.values().stream().findAny().get();
+        for (int i = 0; i < expResult[0].length; i++) {
+            assertEquals(expResult[0][i], foundRoots[0][i]);
+        }
     }
 
     private List<Long> getAllIds() throws DataAccessException {

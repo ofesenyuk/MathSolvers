@@ -10,6 +10,7 @@ import com.sf.shared.dto.ProblemDTO;
 import com.sf.utilites.MatrixUtilites;
 import java.util.AbstractMap.SimpleEntry;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Comparator;
@@ -30,6 +31,7 @@ import org.springframework.data.util.Pair;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.CollectionUtils;
 
 /**
  *
@@ -38,8 +40,13 @@ import org.springframework.transaction.annotation.Transactional;
 @Service
 @RequiredArgsConstructor
 public class ProblemService {
+
+    static final Map<String, String[][]> SOLUTION_NULL_OBJECT
+            = getSolutionNullObject();
+    
     private static final String META_CLASS = "metaClass";
     private static final String DESCRIPTION = "description";
+
     private Logger LOG = LoggerFactory.getLogger(ProblemService.class);
     private final ProblemRepository problemRepository;
 //    private final DozerBeanMapper mapper;
@@ -83,6 +90,7 @@ public class ProblemService {
         final boolean isProblemNew = problemDTO.getId() == null;
         if (isProblemNew) {
             Problem problem = toNewProblemDB(problemDTO);
+            problem.setMatrixDimension(1);
             save(problem);
             LOG.info("new problem with id {} is saved", problem.getId());
             return;
@@ -105,6 +113,38 @@ public class ProblemService {
         problemRepository.deleteById(id);
         LOG.info("problem with id {} is deveted", id);
     }
+
+    @Transactional(propagation = Propagation.REQUIRED, readOnly = true)
+    public Map<String, String[][]> findSolution(Long id) {
+        if (!problemRepository.findById(id).isPresent()) {
+            return SOLUTION_NULL_OBJECT;
+        }
+        List<Matrix> solutionMatrixes = matrixService.findSolution(id);
+        final Pair<Integer, Integer> dims
+                = matrixUtilites.getMatrixDimensions(solutionMatrixes);
+        String[][] solutionArray
+                = new String[dims.getFirst()][dims.getSecond()];
+        solutionMatrixes.forEach(m -> solutionArray[m.getI()][m.getJ()]
+                = m.getBinaryValue() != null
+                ? new String(m.getBinaryValue())
+                : m.getFloatValue().toString()
+        );
+        Map<String, String[][]> solution = Collections.singletonMap("",
+                solutionArray);
+        
+        final Problem problem = problemRepository.getOne(id);
+        problem.setIsSolved(true);
+        this.save(problem);
+        return solution;
+    }
+
+    @Transactional(propagation = Propagation.REQUIRED)
+    public Problem save(Problem problem) {
+        validateMatrixes(problem);
+
+        return problemRepository.save(problem);
+    }
+
     
     /**
      * converts problem and connected matrixes in DB to problemDTO 
@@ -321,31 +361,13 @@ public class ProblemService {
         }
         return matrixes;
     }
-
-    public Map<String, String[][]> getSolution(Long id) {
-        List<Matrix> solutionMatrixes = matrixService.getSolution(id);
-        final Pair<Integer, Integer> dims 
-            = matrixUtilites.getMatrixDimensions(solutionMatrixes);
-        String[][] solutionArray 
-            = new String[dims.getFirst()][dims.getSecond()];
-        solutionMatrixes.forEach(m -> solutionArray[m.getI()][m.getJ()] 
-                = m.getBinaryValue() != null 
-                ? new String(m.getBinaryValue())
-                : m.getFloatValue().toString()
-        );
-        Map<String, String[][]> solution = Collections.singletonMap("", 
-            solutionArray);
-        return solution;
-    }
-
-    public Problem save(Problem problem) {
-        validateMatrixes(problem);
-                
-        return problemRepository.save(problem);
-    }
-
+    
     private void validateMatrixes(Problem problem) {
-        List<Matrix> conditionMatrixes = problem.getMatrixes().stream()
+        final Collection<Matrix> matrixes = problem.getMatrixes();
+        if (CollectionUtils.isEmpty(matrixes)) {
+            return;
+        }
+        List<Matrix> conditionMatrixes = matrixes.stream()
             .filter(Matrix::getIsCondition)
             .filter(Objects::nonNull)
             .collect(Collectors.toList());
@@ -365,9 +387,17 @@ public class ProblemService {
         final HashSet<Pair<Integer, Integer>> indexesSet 
                 = new HashSet<>(indexesList);
         if (indexesList.size() != indexesSet.size()) {
-            throw new IllegalArgumentException("there are coinciding pairs "
-                    + "among matrix indexes:" + indexesList);
+            throw new IllegalArgumentException(
+                "There are coinciding pairs among matrix indexes:" 
+                        + indexesList);
         }
+    }
+
+    private static Map<String, String[][]> getSolutionNullObject() {
+        final String[][] voidMatrix = new String[][]{new String[]{null}};
+        final Map<String, String[][]> voidMap = new HashMap<>();
+        voidMap.put("", voidMatrix);
+        return Collections.unmodifiableMap(voidMap);
     }
 }
 
